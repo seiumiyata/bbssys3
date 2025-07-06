@@ -3,7 +3,7 @@
 
 """
 PC-98時代パソコン通信BBS風アプリケーション - メインモジュール完全版
-Version: 3.0.0 - 全機能実装・バージョン管理・動的スレッド作成対応版
+Version: 3.1.0 - 投稿頻度向上・ユーザー応答強化・レスポンシブ対応版
 Author: AI Assistant
 Created: 2025-07-06
 """
@@ -49,15 +49,16 @@ except ImportError as e:
 
 # アプリケーション情報
 APP_NAME = "草の根BBS - PC-98風パソコン通信"
-APP_VERSION = "3.0.0"
-APP_BUILD = "20250706"
+APP_VERSION = "3.1.0"
+APP_BUILD = "20250706-2"
 APP_AUTHOR = "AI Assistant"
 VERSION_HISTORY = [
     {"version": "1.0.0", "date": "2025-01-01", "changes": "初回リリース - 基本BBS機能"},
     {"version": "1.5.0", "date": "2025-03-15", "changes": "G4F接続問題解決、ペルソナ拡張"},
     {"version": "2.0.0", "date": "2025-05-20", "changes": "Gemini CLI対応、管理画面拡張"},
     {"version": "2.1.0", "date": "2025-06-10", "changes": "初期化機能、統計表示改善"},
-    {"version": "3.0.0", "date": "2025-07-06", "changes": "動的スレッド作成、呼びかけ応答、完全版"}
+    {"version": "3.0.0", "date": "2025-07-06", "changes": "動的スレッド作成、呼びかけ応答、完全版"},
+    {"version": "3.1.0", "date": "2025-07-06", "changes": "投稿頻度向上、ユーザー応答強化、レスポンシブ対応"}
 ]
 
 # ログ設定
@@ -238,6 +239,20 @@ class DatabaseManager:
                     description TEXT,
                     ip_address TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+            
+            # 投稿キャッシュテーブル（新規追加）
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS post_cache (
+                    cache_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    thread_id INTEGER,
+                    persona_name TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    is_used BOOLEAN DEFAULT FALSE,
+                    priority INTEGER DEFAULT 0,
+                    FOREIGN KEY (thread_id) REFERENCES threads(thread_id)
                 )
             ''')
             
@@ -939,35 +954,52 @@ class ThreadManager:
                     )
                     logger.debug(f"[THREAD] デフォルトスレッド作成: {thread_title} (ID: {thread_id})")
     
-    def create_thread(self, main_category_id: int, sub_category_id: int, title: str, 
-                     description: str = "", created_by: str = "ユーザー") -> int:
-        """動的スレッド作成"""
+    def create_thread_safe(self, main_category_id: int, sub_category_id: int, title: str, 
+                          description: str = "", created_by: str = "ユーザー") -> int:
+        """安全なスレッド作成メソッド"""
         try:
-            # 重複チェック
-            existing = self.db_manager.execute_query(
-                "SELECT thread_id FROM threads WHERE title=? AND main_category_id=? AND sub_category_id=?",
-                (title, main_category_id, sub_category_id)
-            )
+            # タイトルの正規化（重複を避けるため）
+            normalized_title = title.strip()
+            if not normalized_title:
+                logger.error("[THREAD] タイトルが空です")
+                return -1
             
-            if existing:
-                logger.warning(f"[THREAD] 重複スレッド作成試行: {title}")
-                return existing[0][0]
+            # 同名スレッドがある場合は連番を付ける
+            base_title = normalized_title
+            counter = 1
+            
+            while True:
+                # 重複チェック
+                existing = self.db_manager.execute_query(
+                    "SELECT thread_id FROM threads WHERE title=? AND main_category_id=? AND sub_category_id=?",
+                    (normalized_title, main_category_id, sub_category_id)
+                )
+                
+                if not existing:
+                    break
+                
+                # 連番を付けて再試行
+                counter += 1
+                normalized_title = f"{base_title} ({counter})"
             
             # スレッド作成
             thread_id = self.db_manager.execute_insert(
                 """INSERT INTO threads (main_category_id, sub_category_id, title, description, created_by, auto_created)
                    VALUES (?, ?, ?, ?, ?, ?)""",
-                (main_category_id, sub_category_id, title, description, created_by, False)
+                (main_category_id, sub_category_id, normalized_title, description, created_by, False)
             )
             
-            # アクティビティログ
-            self.db_manager.log_activity("thread_create", created_by, "thread", thread_id, f"スレッド作成: {title}")
-            
-            logger.info(f"[THREAD] 新規スレッド作成: {title} (ID: {thread_id}, 作成者: {created_by})")
-            return thread_id
-            
+            if thread_id > 0:
+                # アクティビティログ
+                self.db_manager.log_activity("thread_create", created_by, "thread", thread_id, f"スレッド作成: {normalized_title}")
+                logger.info(f"[THREAD] 新規スレッド作成成功: {normalized_title} (ID: {thread_id})")
+                return thread_id
+            else:
+                logger.error(f"[THREAD] スレッド作成失敗: INSERT戻り値 = {thread_id}")
+                return -1
+                
         except Exception as e:
-            logger.error(f"[THREAD] スレッド作成エラー: {e}")
+            logger.error(f"[THREAD] スレッド作成例外: {e}")
             return -1
     
     def get_threads_by_category(self, main_category_id: int) -> List[Dict]:
@@ -1076,42 +1108,6 @@ class ThreadManager:
         mentions = re.findall(r'@([^\s]+)', content)
         return ",".join(mentions) if mentions else ""
     
-    def edit_post(self, post_id: int, new_content: str, editor_name: str) -> bool:
-        """投稿編集"""
-        try:
-            self.db_manager.execute_insert(
-                """UPDATE posts SET 
-                   content=?, updated_at=CURRENT_TIMESTAMP, is_edited=1
-                   WHERE post_id=?""",
-                (new_content, post_id)
-            )
-            
-            self.db_manager.log_activity("post_edit", editor_name, "post", post_id, f"投稿編集: {new_content[:50]}...")
-            logger.info(f"[THREAD] 投稿編集: Post {post_id} by {editor_name}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"[THREAD] 投稿編集エラー: {e}")
-            return False
-    
-    def delete_post(self, post_id: int, deleter_name: str) -> bool:
-        """投稿削除（論理削除）"""
-        try:
-            self.db_manager.execute_insert(
-                """UPDATE posts SET 
-                   is_deleted=1, updated_at=CURRENT_TIMESTAMP
-                   WHERE post_id=?""",
-                (post_id,)
-            )
-            
-            self.db_manager.log_activity("post_delete", deleter_name, "post", post_id, "投稿削除")
-            logger.info(f"[THREAD] 投稿削除: Post {post_id} by {deleter_name}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"[THREAD] 投稿削除エラー: {e}")
-            return False
-    
     def increment_view_count(self, thread_id: int):
         """ビューカウント増加"""
         try:
@@ -1139,44 +1135,183 @@ class ThreadManager:
         except Exception as e:
             logger.error(f"[THREAD] 最終AI投稿時間取得エラー: {e}")
             return 999999
+
+class PostScheduler:
+    """投稿スケジューリングクラス - 高頻度投稿対応"""
     
-    def get_thread_by_id(self, thread_id: int) -> Optional[Dict]:
-        """スレッド詳細取得"""
-        try:
-            result = self.db_manager.execute_query(
-                """SELECT t.thread_id, t.title, t.description, t.created_by, t.created_at,
-                          t.post_count, t.view_count, t.is_pinned, t.is_locked,
-                          m.category_name, s.sub_category_name
-                   FROM threads t
-                   JOIN main_categories m ON t.main_category_id = m.category_id
-                   JOIN sub_categories s ON t.sub_category_id = s.sub_category_id
-                   WHERE t.thread_id=?""",
-                (thread_id,)
-            )
+    def __init__(self, persona_manager, thread_manager, ai_manager):
+        self.persona_manager = persona_manager
+        self.thread_manager = thread_manager
+        self.ai_manager = ai_manager
+        self.scheduled_posts = []
+        self.is_running = False
+        self.post_cache = {}  # {thread_id: [cached_posts]}
+        self.lock = threading.Lock()
+        
+    def start_high_frequency_posting(self):
+        """高頻度投稿システム開始"""
+        def scheduler_worker():
+            while self.is_running:
+                try:
+                    # 5-15秒間隔で投稿チェック
+                    interval = random.uniform(5, 15)
+                    time.sleep(interval)
+                    
+                    # スケジュール済み投稿の実行
+                    self.execute_scheduled_posts()
+                    
+                    # 新規投稿のスケジューリング
+                    self.schedule_new_posts()
+                    
+                except Exception as e:
+                    logger.error(f"[SCHEDULER] スケジューラーエラー: {e}")
+                    time.sleep(30)
+        
+        self.is_running = True
+        scheduler_thread = threading.Thread(target=scheduler_worker, daemon=True)
+        scheduler_thread.start()
+        logger.info("[SCHEDULER] 高頻度投稿システム開始")
+    
+    def stop(self):
+        """スケジューラー停止"""
+        self.is_running = False
+    
+    def execute_scheduled_posts(self):
+        """スケジュール済み投稿実行"""
+        with self.lock:
+            current_time = time.time()
+            posts_to_execute = []
             
-            if result:
-                r = result[0]
-                return {
-                    "thread_id": r[0],
-                    "title": r[1],
-                    "description": r[2],
-                    "created_by": r[3],
-                    "created_at": r[4],
-                    "post_count": r[5] or 0,
-                    "view_count": r[6] or 0,
-                    "is_pinned": bool(r[7]),
-                    "is_locked": bool(r[8]),
-                    "main_category": r[9],
-                    "sub_category": r[10]
-                }
-            return None
+            # 実行時刻に達した投稿を抽出
+            for scheduled_post in self.scheduled_posts[:]:
+                if scheduled_post['execute_time'] <= current_time:
+                    posts_to_execute.append(scheduled_post)
+                    self.scheduled_posts.remove(scheduled_post)
+            
+            # 投稿実行
+            for post_data in posts_to_execute:
+                try:
+                    success = self.thread_manager.add_post(
+                        post_data['thread_id'],
+                        post_data['persona_name'],
+                        post_data['content'],
+                        is_user_post=False
+                    )
+                    
+                    if success:
+                        logger.info(f"[SCHEDULER] スケジュール投稿実行: {post_data['persona_name']} -> Thread {post_data['thread_id']}")
+                    
+                except Exception as e:
+                    logger.error(f"[SCHEDULER] 投稿実行エラー: {e}")
+    
+    def schedule_new_posts(self):
+        """新規投稿スケジューリング"""
+        try:
+            # アクティブなスレッドを取得
+            active_threads = self._get_active_threads()
+            
+            if not active_threads:
+                return
+            
+            # 投稿候補スレッドを選択（最大3つ）
+            candidate_threads = random.sample(active_threads, min(3, len(active_threads)))
+            
+            for thread in candidate_threads:
+                # スケジュール済み投稿数をチェック
+                scheduled_count = sum(1 for p in self.scheduled_posts if p['thread_id'] == thread['thread_id'])
+                
+                if scheduled_count < 2:  # スレッドあたり最大2件まで
+                    # 投稿生成・スケジューリング
+                    self._schedule_single_post(thread)
+                    
+        except Exception as e:
+            logger.error(f"[SCHEDULER] 新規投稿スケジューリングエラー: {e}")
+    
+    def _get_active_threads(self) -> List[Dict]:
+        """アクティブスレッド一覧取得"""
+        try:
+            main_categories = [{"id": 1}, {"id": 2}, {"id": 3}, {"id": 4}, {"id": 5}]  # 5大分類
+            all_threads = []
+            
+            for cat in main_categories:
+                threads = self.thread_manager.get_threads_by_category(cat["id"])
+                all_threads.extend(threads)
+            
+            return [t for t in all_threads if not t.get('is_locked', False)]
             
         except Exception as e:
-            logger.error(f"[THREAD] スレッド詳細取得エラー: {e}")
+            logger.error(f"[SCHEDULER] アクティブスレッド取得エラー: {e}")
+            return []
+    
+    def _schedule_single_post(self, thread: Dict):
+        """単一投稿のスケジューリング"""
+        try:
+            # ペルソナ選択
+            if hasattr(self.persona_manager, 'select_posting_persona'):
+                persona = self.persona_manager.select_posting_persona(thread['thread_id'])
+            else:
+                return
+            
+            if not persona:
+                return
+            
+            # 投稿内容生成
+            if hasattr(self.persona_manager, '_generate_post_content_for_scheduler'):
+                post_content = self.persona_manager._generate_post_content_for_scheduler(persona, thread)
+            else:
+                # フォールバック: 簡易投稿生成
+                post_content = self._generate_simple_post(persona, thread)
+            
+            if not post_content:
+                return
+            
+            # 実行時刻決定（5-120秒後）
+            execute_time = time.time() + random.uniform(5, 120)
+            
+            # スケジュールに追加
+            scheduled_post = {
+                'thread_id': thread['thread_id'],
+                'persona_name': persona.name,
+                'content': post_content,
+                'execute_time': execute_time,
+                'scheduled_at': time.time()
+            }
+            
+            with self.lock:
+                self.scheduled_posts.append(scheduled_post)
+            
+            logger.info(f"[SCHEDULER] 投稿スケジュール: {persona.name} -> Thread {thread['thread_id']} (実行予定: {execute_time - time.time():.1f}秒後)")
+            
+        except Exception as e:
+            logger.error(f"[SCHEDULER] 単一投稿スケジューリングエラー: {e}")
+    
+    def _generate_simple_post(self, persona, thread: Dict) -> Optional[str]:
+        """簡易投稿生成（フォールバック）"""
+        try:
+            # シンプルなテンプレートベース投稿
+            templates = [
+                f"{thread['title'].replace('について語りましょう', '')}について興味があります。",
+                f"最近{thread['title'].replace('について語りましょう', '')}を始めました。",
+                f"{thread['title'].replace('について語りましょう', '')}の話題ですね。",
+                f"みなさんの{thread['title'].replace('について語りましょう', '')}への意見を聞かせてください。"
+            ]
+            
+            base_content = random.choice(templates)
+            
+            # ペルソナ特性による調整
+            if hasattr(persona, 'catchphrases') and persona.catchphrases:
+                if random.random() < 0.3:
+                    catchphrase = random.choice(persona.catchphrases)
+                    base_content = f"{catchphrase}、{base_content}"
+            
+            return base_content
+            
+        except Exception as e:
+            logger.error(f"[SCHEDULER] 簡易投稿生成エラー: {e}")
             return None
 
 class MentionManager:
-    """呼びかけ応答管理クラス"""
+    """呼びかけ応答管理クラス - 強化版"""
     
     def __init__(self, persona_manager, ai_manager: AIManager):
         self.persona_manager = persona_manager
@@ -1233,7 +1368,7 @@ class MentionManager:
             # ペルソナ情報を構築
             persona_context = f"""あなたは{persona_name}です。
 年齢: {persona.age}歳
-職業: {persona.occupation}
+職業: {persona.work.occupation}
 性格: {persona.personality.get_personality_description()}
 現在の感情: {persona.emotions.get_emotion_description()}
 
@@ -1263,110 +1398,198 @@ class MentionManager:
             logger.error(f"[MENTION] 呼びかけ応答生成エラー: {e}")
             return None
 
-class DataExporter:
-    """データエクスポート管理クラス"""
+class UserResponseManager:
+    """ユーザー応答管理クラス - 新規追加"""
     
-    def __init__(self, db_manager: DatabaseManager):
-        self.db_manager = db_manager
+    def __init__(self, persona_manager, ai_manager, thread_manager):
+        self.persona_manager = persona_manager
+        self.ai_manager = ai_manager
+        self.thread_manager = thread_manager
     
-    def export_all_data(self, format_type: str = "json") -> Optional[str]:
-        """全データエクスポート"""
+    def trigger_user_responses(self, username: str, content: str, thread_id: int):
+        """ユーザー投稿への応答トリガー"""
         try:
-            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            # 1. 即座に2-4体のペルソナが反応
+            immediate_responders = self._select_immediate_responders(username, content)
             
-            if format_type == "json":
-                return self._export_json(timestamp)
-            elif format_type == "csv":
-                return self._export_csv(timestamp)
-            elif format_type == "backup":
-                return self._export_backup(timestamp)
-            else:
-                logger.error(f"[EXPORT] 未対応のフォーマット: {format_type}")
-                return None
+            for i, persona in enumerate(immediate_responders):
+                # レスポンス時間をずらす
+                delay = random.uniform(3, 12) + (i * random.uniform(2, 5))
                 
+                def delayed_response(p=persona, d=delay):
+                    time.sleep(d)
+                    response = self._generate_user_response(p, username, content, thread_id)
+                    if response:
+                        success = self.thread_manager.add_post(thread_id, p.name, response, is_user_post=False)
+                        if success:
+                            logger.info(f"[USER_RESPONSE] 即座応答成功: {p.name}")
+                
+                # 別スレッドで遅延実行
+                threading.Thread(target=delayed_response, daemon=True).start()
+            
+            # 2. 5-15分後に追加のペルソナが反応
+            def delayed_follow_up():
+                time.sleep(random.uniform(300, 900))  # 5-15分
+                follow_up_responders = self._select_follow_up_responders(username, content, immediate_responders)
+                
+                for persona in follow_up_responders:
+                    response = self._generate_follow_up_response(persona, username, content, thread_id)
+                    if response:
+                        delay = random.uniform(5, 30)
+                        time.sleep(delay)
+                        success = self.thread_manager.add_post(thread_id, persona.name, response, is_user_post=False)
+                        if success:
+                            logger.info(f"[USER_RESPONSE] フォローアップ応答成功: {persona.name}")
+            
+            threading.Thread(target=delayed_follow_up, daemon=True).start()
+            
         except Exception as e:
-            logger.error(f"[EXPORT] エクスポートエラー: {e}")
+            logger.error(f"[USER_RESPONSE] ユーザー応答エラー: {e}")
+    
+    def _select_immediate_responders(self, username: str, content: str) -> List:
+        """即座に反応するペルソナ選択"""
+        if not hasattr(self.persona_manager, 'personas'):
+            return []
+        
+        candidates = []
+        
+        for persona in self.persona_manager.personas.values():
+            if not persona.is_active:
+                continue
+            
+            # 反応確率計算
+            base_probability = 0.3
+            
+            # 社交性による調整
+            social_bonus = persona.personality.sociability * 0.3
+            
+            # 世代による調整
+            if hasattr(persona, 'generation'):
+                from persona import Generation
+                if persona.generation == Generation.GENERATION_2010s:
+                    generation_bonus = 0.2  # 若い世代は積極的
+                elif persona.generation == Generation.GENERATION_1950s:
+                    generation_bonus = 0.1  # 年配世代は控えめ
+                else:
+                    generation_bonus = 0.15
+            else:
+                generation_bonus = 0.15
+            
+            # 特殊属性による調整
+            if hasattr(persona, 'special'):
+                from persona import PersonalityType
+                if persona.special.personality_type == PersonalityType.TROLL:
+                    special_bonus = 0.4  # 荒らしは積極的に反応
+                elif persona.special.personality_type == PersonalityType.WEIRD:
+                    special_bonus = 0.2  # 変人は独特に反応
+                else:
+                    special_bonus = 0.0
+            else:
+                special_bonus = 0.0
+            
+            total_probability = base_probability + social_bonus + generation_bonus + special_bonus
+            
+            if random.random() < total_probability:
+                candidates.append((persona, total_probability))
+        
+        # 確率の高い順にソートして上位2-4体を選択
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        responder_count = min(random.randint(2, 4), len(candidates))
+        
+        return [candidate[0] for candidate in candidates[:responder_count]]
+    
+    def _select_follow_up_responders(self, username: str, content: str, immediate_responders: List) -> List:
+        """フォローアップ応答者選択"""
+        if not hasattr(self.persona_manager, 'personas'):
+            return []
+        
+        immediate_names = [p.name for p in immediate_responders]
+        candidates = []
+        
+        for persona in self.persona_manager.personas.values():
+            if not persona.is_active or persona.name in immediate_names:
+                continue
+            
+            # フォローアップ確率は低め
+            if random.random() < 0.15:
+                candidates.append(persona)
+        
+        return candidates[:2]  # 最大2体
+    
+    def _generate_user_response(self, persona, username: str, content: str, thread_id: int) -> Optional[str]:
+        """ユーザー投稿への応答生成"""
+        try:
+            # ペルソナコンテキスト
+            if hasattr(persona, 'generate_response_context'):
+                persona_context = persona.generate_response_context()
+            else:
+                persona_context = f"あなたは{persona.name}です。"
+            
+            # 応答プロンプト
+            prompt = f"""ユーザー「{username}」が以下の投稿をしました：
+「{content}」
+
+この投稿に対して、あなた（{persona.name}）らしく自然に返答してください。
+
+返答のガイドライン：
+- フレンドリーで親しみやすい返事を心がけてください
+- 相手の投稿内容に具体的に言及してください
+- あなたの経験や意見を交えてください
+- 100文字以内で簡潔にまとめてください
+- 会話が続くような内容にしてください"""
+            
+            # AI応答生成
+            response = self.ai_manager.generate_response(prompt, persona_context)
+            
+            if response:
+                return self._post_process_user_response(response, persona, username)
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"[USER_RESPONSE] ユーザー応答生成エラー: {e}")
             return None
     
-    def _export_json(self, timestamp: str) -> str:
-        """JSON形式でエクスポート"""
-        filename = f"bbs_export_{timestamp}.json"
-        
-        export_data = {
-            "export_info": {
-                "timestamp": timestamp,
-                "version": APP_VERSION,
-                "format": "json"
-            },
-            "categories": {},
-            "threads": [],
-            "posts": [],
-            "personas": [],
-            "statistics": {}
-        }
-        
-        # カテゴリデータ
-        main_categories = self.db_manager.execute_query("SELECT * FROM main_categories")
-        sub_categories = self.db_manager.execute_query("SELECT * FROM sub_categories")
-        export_data["categories"]["main"] = [dict(zip([desc[0] for desc in self.db_manager.execute_query("PRAGMA table_info(main_categories)")], cat)) for cat in main_categories]
-        export_data["categories"]["sub"] = [dict(zip([desc[0] for desc in self.db_manager.execute_query("PRAGMA table_info(sub_categories)")], cat)) for cat in sub_categories]
-        
-        # スレッドデータ
-        threads = self.db_manager.execute_query("SELECT * FROM threads")
-        export_data["threads"] = [dict(zip([desc[0] for desc in self.db_manager.execute_query("PRAGMA table_info(threads)")], thread)) for thread in threads]
-        
-        # 投稿データ
-        posts = self.db_manager.execute_query("SELECT * FROM posts")
-        export_data["posts"] = [dict(zip([desc[0] for desc in self.db_manager.execute_query("PRAGMA table_info(posts)")], post)) for post in posts]
-        
-        # ペルソナデータ
-        personas = self.db_manager.execute_query("SELECT * FROM personas")
-        export_data["personas"] = [dict(zip([desc[0] for desc in self.db_manager.execute_query("PRAGMA table_info(personas)")], persona)) for persona in personas]
-        
-        # 統計データ
-        stats = self.db_manager.execute_query("SELECT * FROM ai_connection_stats")
-        export_data["statistics"]["ai_stats"] = [dict(zip([desc[0] for desc in self.db_manager.execute_query("PRAGMA table_info(ai_connection_stats)")], stat)) for stat in stats]
-        
-        with open(filename, 'w', encoding='utf-8') as f:
-            json.dump(export_data, f, ensure_ascii=False, indent=2)
-        
-        logger.info(f"[EXPORT] JSONエクスポート完了: {filename}")
-        return filename
-    
-    def _export_csv(self, timestamp: str) -> str:
-        """CSV形式でエクスポート"""
-        base_filename = f"bbs_export_{timestamp}"
-        
-        # テーブルごとにCSVファイルを作成
-        tables = ["main_categories", "sub_categories", "threads", "posts", "personas", "ai_connection_stats"]
-        
-        for table in tables:
-            filename = f"{base_filename}_{table}.csv"
+    def _generate_follow_up_response(self, persona, username: str, content: str, thread_id: int) -> Optional[str]:
+        """フォローアップ応答生成"""
+        try:
+            # フォローアップ用の異なるプロンプト
+            if hasattr(persona, 'generate_response_context'):
+                persona_context = persona.generate_response_context()
+            else:
+                persona_context = f"あなたは{persona.name}です。"
             
-            # テーブルデータを取得
-            data = self.db_manager.execute_query(f"SELECT * FROM {table}")
+            prompt = f"""先ほどユーザー「{username}」が投稿した内容について、追加で何かコメントがあれば投稿してください：
+「{content}」
+
+フォローアップのガイドライン：
+- 先ほどの話題に関連した追加情報や感想を述べてください
+- 新しい視点や質問を提示してください
+- 80文字以内で簡潔にまとめてください"""
             
-            if data:
-                # カラム名を取得
-                columns = [desc[0] for desc in self.db_manager.execute_query(f"PRAGMA table_info({table})")]
-                
-                with open(filename, 'w', newline='', encoding='utf-8') as f:
-                    writer = csv.writer(f)
-                    writer.writerow(columns)
-                    writer.writerows(data)
-        
-        logger.info(f"[EXPORT] CSVエクスポート完了: {base_filename}_*.csv")
-        return base_filename
+            response = self.ai_manager.generate_response(prompt, persona_context)
+            
+            if response:
+                return response
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"[USER_RESPONSE] フォローアップ応答生成エラー: {e}")
+            return None
     
-    def _export_backup(self, timestamp: str) -> str:
-        """バックアップ形式でエクスポート"""
-        filename = f"bbs_backup_{timestamp}.db"
+    def _post_process_user_response(self, response: str, persona, username: str) -> str:
+        """ユーザー応答の後処理"""
+        processed = response
         
-        # データベースファイルをコピー
-        shutil.copy2(self.db_manager.db_path, filename)
+        # ユーザー名への言及を適度に追加
+        if random.random() < 0.4 and username not in processed:
+            if random.random() < 0.5:
+                processed = f"{username}さん、{processed}"
+            else:
+                processed = f"{processed} {username}さんはどう思いますか？"
         
-        logger.info(f"[EXPORT] バックアップ完了: {filename}")
-        return filename
+        return processed
 
 class BBSApplication:
     """メインアプリケーションクラス - 完全版"""
@@ -1376,8 +1599,10 @@ class BBSApplication:
         
         # 設定の初期化
         self.font_size = 12
-        self.window_width = 1200
-        self.window_height = 800
+        self.window_width = 1366
+        self.window_height = 768
+        self.auto_post_interval = 30  # 高頻度化
+        self.current_username = "あなた"
         self.load_settings()
         self.setup_window()
         
@@ -1388,7 +1613,10 @@ class BBSApplication:
         self.thread_manager = ThreadManager(self.db_manager, self.category_manager)
         self.persona_manager = PersonaManager(self.db_manager, self.ai_manager)
         self.mention_manager = MentionManager(self.persona_manager, self.ai_manager)
-        self.data_exporter = DataExporter(self.db_manager)
+        self.user_response_manager = UserResponseManager(self.persona_manager, self.ai_manager, self.thread_manager)
+        
+        # 投稿スケジューラー
+        self.post_scheduler = PostScheduler(self.persona_manager, self.thread_manager, self.ai_manager)
         
         # UI状態
         self.current_main_category_id = None
@@ -1396,7 +1624,6 @@ class BBSApplication:
         self.current_threads = []
         self.admin_mode = False
         self.ai_activity_enabled = True
-        self.auto_post_interval = 60
         self.selected_post_id = None
         
         # メッセージキュー
@@ -1410,7 +1637,7 @@ class BBSApplication:
         self.verify_initialization()
         
         # 自動投稿システム開始
-        self.start_auto_posting()
+        self.start_enhanced_auto_posting()
         
         # メッセージ処理開始
         self.process_messages()
@@ -1424,10 +1651,11 @@ class BBSApplication:
                 with open("bbs_settings.json", "r", encoding="utf-8") as f:
                     settings = json.load(f)
                     self.font_size = settings.get("font_size", 12)
-                    self.window_width = settings.get("window_width", 1200)
-                    self.window_height = settings.get("window_height", 800)
-                    self.auto_post_interval = settings.get("auto_post_interval", 60)
+                    self.window_width = settings.get("window_width", 1366)
+                    self.window_height = settings.get("window_height", 768)
+                    self.auto_post_interval = settings.get("auto_post_interval", 30)
                     self.ai_activity_enabled = settings.get("ai_activity_enabled", True)
+                    self.current_username = settings.get("current_username", "あなた")
         except Exception as e:
             logger.error(f"[APP] 設定読み込みエラー: {e}")
     
@@ -1439,7 +1667,8 @@ class BBSApplication:
                 "window_width": self.window_width,
                 "window_height": self.window_height,
                 "auto_post_interval": self.auto_post_interval,
-                "ai_activity_enabled": self.ai_activity_enabled
+                "ai_activity_enabled": self.ai_activity_enabled,
+                "current_username": self.current_username
             }
             with open("bbs_settings.json", "w", encoding="utf-8") as f:
                 json.dump(settings, f, ensure_ascii=False, indent=2)
@@ -1447,13 +1676,16 @@ class BBSApplication:
             logger.error(f"[APP] 設定保存エラー: {e}")
     
     def setup_window(self):
-        """ウィンドウ設定 - レスポンシブ対応"""
+        """ウィンドウ設定 - レスポンシブ強化版"""
         self.root.title(f"{APP_NAME} v{APP_VERSION}")
         self.root.geometry(f"{self.window_width}x{self.window_height}")
         self.root.configure(bg="#000000")
         
-        # 最小サイズ設定
-        self.root.minsize(800, 600)
+        # 最小サイズ設定（1366x768対応）
+        self.root.minsize(1024, 600)
+        
+        # 画面中央に配置
+        self._center_window()
         
         # ウィンドウリサイズイベント
         self.root.bind('<Configure>', self.on_window_resize)
@@ -1472,51 +1704,108 @@ class BBSApplication:
         # プログレスバーのスタイル
         style.configure('BBS.TProgressbar', background='#00FF00', troughcolor='#000080')
     
+    def _center_window(self):
+        """ウィンドウを画面中央に配置"""
+        try:
+            # 画面サイズ取得
+            screen_width = self.root.winfo_screenwidth()
+            screen_height = self.root.winfo_screenheight()
+            
+            # 中央座標計算
+            x = (screen_width - self.window_width) // 2
+            y = (screen_height - self.window_height) // 2
+            
+            self.root.geometry(f"{self.window_width}x{self.window_height}+{x}+{y}")
+        except Exception as e:
+            logger.error(f"[APP] ウィンドウ中央配置エラー: {e}")
+    
     def on_window_resize(self, event):
-        """ウィンドウリサイズイベント"""
+        """ウィンドウリサイズイベント - 強化版"""
         if event.widget == self.root:
             self.window_width = event.width
             self.window_height = event.height
             self.adjust_responsive_layout()
     
     def adjust_responsive_layout(self):
-        """レスポンシブレイアウト調整"""
+        """レスポンシブレイアウト調整 - 1366x768対応"""
         try:
-            # ウィンドウサイズに応じてフォントサイズを調整
-            if self.window_width < 900:
+            # フォントサイズの動的調整
+            if self.window_width < 1024:
                 new_font_size = max(8, self.font_size - 2)
-            elif self.window_width < 1100:
+            elif self.window_width < 1366:
                 new_font_size = max(10, self.font_size - 1)
             else:
                 new_font_size = self.font_size
             
-            # フォントサイズ更新
+            # UIコンポーネントのサイズ調整
+            if hasattr(self, 'category_listbox'):
+                if self.window_height < 700:
+                    self.category_listbox.configure(height=5)
+                elif self.window_height < 800:
+                    self.category_listbox.configure(height=6)
+                else:
+                    self.category_listbox.configure(height=8)
+            
+            if hasattr(self, 'thread_listbox'):
+                if self.window_height < 700:
+                    self.thread_listbox.configure(height=12)
+                elif self.window_height < 800:
+                    self.thread_listbox.configure(height=15)
+                else:
+                    self.thread_listbox.configure(height=18)
+            
             if hasattr(self, 'post_display'):
+                if self.window_height < 700:
+                    self.post_display.configure(height=18)
+                elif self.window_height < 800:
+                    self.post_display.configure(height=22)
+                else:
+                    self.post_display.configure(height=25)
                 self.post_display.configure(font=('MS Gothic', new_font_size))
             
             if hasattr(self, 'post_input'):
+                if self.window_height < 700:
+                    self.post_input.configure(height=3)
+                else:
+                    self.post_input.configure(height=4)
                 self.post_input.configure(font=('MS Gothic', new_font_size))
             
-            # 600px以下での最適化
-            if self.window_width < 600:
-                # コンパクトモードに切り替え
+            # 1366x768での最適化
+            if self.window_width == 1366 and self.window_height == 768:
+                # 特別最適化
                 if hasattr(self, 'category_listbox'):
-                    self.category_listbox.configure(height=4)
+                    self.category_listbox.configure(height=6)
                 if hasattr(self, 'thread_listbox'):
-                    self.thread_listbox.configure(height=8)
+                    self.thread_listbox.configure(height=14)
+                if hasattr(self, 'post_display'):
+                    self.post_display.configure(height=20)
+                if hasattr(self, 'post_input'):
+                    self.post_input.configure(height=3)
                     
         except Exception as e:
             logger.error(f"[APP] レスポンシブ調整エラー: {e}")
     
     def create_widgets(self):
-        """ウィジェット作成 - 完全版"""
-        # メインフレーム
-        main_frame = ttk.Frame(self.root, style='BBS.TFrame')
-        main_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        """ウィジェット作成 - 完全版（レスポンシブ対応）"""
+        # メインフレーム（スクロール対応）
+        main_canvas = tk.Canvas(self.root, bg="#000000", highlightthickness=0)
+        main_scrollbar = ttk.Scrollbar(self.root, orient="vertical", command=main_canvas.yview)
+        main_frame = ttk.Frame(main_canvas, style='BBS.TFrame')
+        
+        main_frame.bind(
+            "<Configure>",
+            lambda e: main_canvas.configure(scrollregion=main_canvas.bbox("all"))
+        )
+        
+        main_canvas.create_window((0, 0), window=main_frame, anchor="nw")
+        main_canvas.configure(yscrollcommand=main_scrollbar.set)
+        
+        main_canvas.pack(side="left", fill="both", expand=True)
+        main_scrollbar.pack(side="right", fill="y")
         
         # ヘッダー
         header_frame = ttk.Frame(main_frame, style='BBS.TFrame')
-        header_frame.pack(fill=tk.X, pady=(0, 10))
+        header_frame.pack(fill=tk.X, padx=5, pady=(5, 10))
         
         title_label = ttk.Label(
             header_frame,
@@ -1541,9 +1830,42 @@ class BBSApplication:
         status_label.pack()
         self.status_label = status_label
         
+        # ユーザー設定エリア
+        user_frame = ttk.Frame(main_frame, style='BBS.TFrame')
+        user_frame.pack(fill=tk.X, padx=5, pady=(0, 5))
+        
+        ttk.Label(user_frame, text="ユーザー名:", style='BBS.TLabel').pack(side=tk.LEFT)
+        
+        self.username_var = tk.StringVar(value=self.current_username)
+        self.username_entry = tk.Entry(
+            user_frame,
+            textvariable=self.username_var,
+            bg="#000080",
+            fg="#FFFFFF",
+            font=('MS Gothic', self.font_size),
+            width=15
+        )
+        self.username_entry.pack(side=tk.LEFT, padx=(5, 10))
+        
+        ttk.Button(
+            user_frame,
+            text="設定",
+            command=self.update_username,
+            style='BBS.TButton'
+        ).pack(side=tk.LEFT, padx=(0, 20))
+        
+        # AI活動状況表示
+        self.ai_status_label = ttk.Label(
+            user_frame,
+            text=f"投稿間隔: {self.auto_post_interval}秒",
+            style='BBS.TLabel',
+            font=('MS Gothic', self.font_size - 2)
+        )
+        self.ai_status_label.pack(side=tk.RIGHT)
+        
         # メインコンテンツエリア
         content_frame = ttk.Frame(main_frame, style='BBS.TFrame')
-        content_frame.pack(fill=tk.BOTH, expand=True)
+        content_frame.pack(fill=tk.BOTH, expand=True, padx=5)
         
         # 左側パネル（カテゴリ・スレッド一覧）
         left_frame = ttk.Frame(content_frame, style='BBS.TFrame')
@@ -1632,28 +1954,6 @@ class BBSApplication:
         post_label = ttk.Label(right_frame, text="■ 投稿内容 ■", style='BBS.TLabel')
         post_label.pack(anchor=tk.W)
         
-        # 投稿操作ボタン
-        post_button_frame = ttk.Frame(right_frame, style='BBS.TFrame')
-        post_button_frame.pack(fill=tk.X, pady=(0, 5))
-        
-        self.edit_post_button = ttk.Button(
-            post_button_frame,
-            text="投稿編集",
-            command=self.edit_selected_post,
-            style='BBS.TButton',
-            state=tk.DISABLED
-        )
-        self.edit_post_button.pack(side=tk.LEFT, padx=(0, 5))
-        
-        self.delete_post_button = ttk.Button(
-            post_button_frame,
-            text="投稿削除",
-            command=self.delete_selected_post,
-            style='BBS.TButton',
-            state=tk.DISABLED
-        )
-        self.delete_post_button.pack(side=tk.LEFT)
-        
         self.post_display = scrolledtext.ScrolledText(
             right_frame,
             bg="#000000",
@@ -1702,15 +2002,15 @@ class BBSApplication:
             bg="#000080",
             fg="#FFFFFF",
             font=('MS Gothic', self.font_size),
-            height=5,
+            height=4,
             wrap=tk.WORD,
             insertbackground="#FFFFFF"
         )
         self.post_input.pack(fill=tk.X, pady=(5, 5))
         
-        # ボタンエリア
+        # ボタンエリア（スクロール対応）
         button_frame = ttk.Frame(right_frame, style='BBS.TFrame')
-        button_frame.pack(fill=tk.X)
+        button_frame.pack(fill=tk.X, pady=(0, 10))
         
         self.post_button = ttk.Button(
             button_frame,
@@ -1744,9 +2044,29 @@ class BBSApplication:
         )
         self.admin_button.pack(side=tk.RIGHT)
         
+        # マウスホイールイベントをバインド
+        self._bind_mousewheel(main_canvas)
+        
         # 初期表示
         self.update_thread_list()
         self.update_status()
+        
+        # レスポンシブ調整
+        self.adjust_responsive_layout()
+    
+    def _bind_mousewheel(self, canvas):
+        """マウスホイールイベントバインド"""
+        def _on_mousewheel(event):
+            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        
+        def _bind_to_mousewheel(event):
+            canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        
+        def _unbind_from_mousewheel(event):
+            canvas.unbind_all("<MouseWheel>")
+        
+        canvas.bind('<Enter>', _bind_to_mousewheel)
+        canvas.bind('<Leave>', _unbind_from_mousewheel)
     
     def setup_keybindings(self):
         """キーバインド設定 - 拡張版"""
@@ -1763,6 +2083,9 @@ class BBSApplication:
         self.root.bind('<Control-minus>', lambda e: self.change_font_size(-1))
         self.root.bind('<Control-0>', lambda e: self.reset_font_size())
         
+        # ユーザー名設定
+        self.root.bind('<Control-u>', lambda e: self.username_entry.focus())
+        
         logger.info("[APP] キーバインド設定完了")
     
     def change_font_size(self, delta: int):
@@ -1778,6 +2101,17 @@ class BBSApplication:
         self.font_size = 12
         self.adjust_responsive_layout()
         self.save_settings()
+    
+    def update_username(self):
+        """ユーザー名更新"""
+        new_username = self.username_var.get().strip()
+        if new_username:
+            self.current_username = new_username
+            self.save_settings()
+            messagebox.showinfo("完了", f"ユーザー名を「{new_username}」に設定しました。")
+            logger.info(f"[APP] ユーザー名変更: {new_username}")
+        else:
+            messagebox.showwarning("警告", "ユーザー名を入力してください。")
     
     def verify_initialization(self):
         """初期化状態を検証し、必要に応じて自動復旧"""
@@ -1904,16 +2238,12 @@ class BBSApplication:
     def clear_post_selection(self):
         """投稿選択クリア"""
         self.selected_post_id = None
-        self.edit_post_button.config(state=tk.DISABLED)
-        self.delete_post_button.config(state=tk.DISABLED)
     
     def update_post_selection(self):
         """投稿選択更新"""
         # 実際の実装では、クリック位置から投稿IDを特定
         # ここでは簡易実装
         self.selected_post_id = 1  # 仮の値
-        self.edit_post_button.config(state=tk.NORMAL)
-        self.delete_post_button.config(state=tk.NORMAL)
     
     def update_thread_list(self):
         """スレッド一覧更新 - 拡張版"""
@@ -2104,7 +2434,7 @@ class BBSApplication:
         return '\n '.join(formatted_lines)
     
     def submit_post(self):
-        """投稿送信 - 完全版"""
+        """投稿送信 - ユーザー応答強化版"""
         if not self.current_thread_id:
             messagebox.showwarning("警告", "スレッドが選択されていません。")
             return
@@ -2123,7 +2453,7 @@ class BBSApplication:
             # ユーザー投稿として追加
             success = self.thread_manager.add_post(
                 self.current_thread_id,
-                "あなた",
+                self.current_username,
                 content,
                 is_user_post=True
             )
@@ -2142,11 +2472,10 @@ class BBSApplication:
                 if hasattr(self.persona_manager, 'record_user_interaction'):
                     self.persona_manager.record_user_interaction(self.current_thread_id, content)
                 
-                # メンション応答処理
-                if mention_name or any(keyword in content for keyword in ["みんな", "だれか", "誰か"]):
-                    self.trigger_mention_responses(content)
+                # **ユーザー投稿への積極的返答をトリガー**
+                self.trigger_user_response_system(self.current_username, content, self.current_thread_id)
                 
-                logger.info(f"[APP] ユーザー投稿完了: Thread {self.current_thread_id}")
+                logger.info(f"[APP] ユーザー投稿完了: {self.current_username} -> Thread {self.current_thread_id}")
             else:
                 messagebox.showerror("エラー", "投稿に失敗しました。")
                 
@@ -2154,43 +2483,18 @@ class BBSApplication:
             logger.error(f"[APP] 投稿送信エラー: {e}")
             messagebox.showerror("エラー", f"投稿中にエラーが発生しました: {e}")
     
-    def trigger_mention_responses(self, original_content: str):
-        """メンション応答のトリガー"""
-        try:
-            # メンション検出
-            mentions = self.mention_manager.detect_mentions(original_content)
-            
-            # 呼びかけ応答処理（別スレッドで実行）
-            def process_mentions():
-                for persona_name in mentions:
-                    if self.mention_manager.should_respond_to_mention(persona_name, original_content):
-                        response = self.mention_manager.generate_mention_response(
-                            persona_name, original_content, self.current_thread_id
-                        )
-                        
-                        if response:
-                            # 応答投稿を追加
-                            success = self.thread_manager.add_post(
-                                self.current_thread_id,
-                                persona_name,
-                                response,
-                                is_user_post=False
-                            )
-                            
-                            if success:
-                                # UI更新をメインスレッドに依頼
-                                self.message_queue.put(('update_display', None))
-                                logger.info(f"[MENTION] 呼びかけ応答: {persona_name}")
-                            
-                            # 応答間隔
-                            time.sleep(random.uniform(3, 8))
-            
-            # 別スレッドで実行
-            mention_thread = threading.Thread(target=process_mentions, daemon=True)
-            mention_thread.start()
-            
-        except Exception as e:
-            logger.error(f"[APP] メンション応答エラー: {e}")
+    def trigger_user_response_system(self, username: str, content: str, thread_id: int):
+        """ユーザー投稿への応答システムトリガー"""
+        def response_worker():
+            try:
+                # ユーザー応答マネージャーに積極的返答を依頼
+                self.user_response_manager.trigger_user_responses(username, content, thread_id)
+            except Exception as e:
+                logger.error(f"[APP] ユーザー応答システムエラー: {e}")
+        
+        # 別スレッドで実行
+        response_thread = threading.Thread(target=response_worker, daemon=True)
+        response_thread.start()
     
     def show_create_thread_dialog(self):
         """スレッド作成ダイアログ表示"""
@@ -2291,12 +2595,12 @@ class BBSApplication:
                     return
                 
                 # スレッド作成
-                thread_id = self.thread_manager.create_thread(
+                thread_id = self.thread_manager.create_thread_safe(
                     self.current_main_category_id,
                     sub_cat_id,
                     title,
                     description,
-                    "あなた"
+                    self.current_username
                 )
                 
                 if thread_id > 0:
@@ -2433,7 +2737,10 @@ class BBSApplication:
                         status_label.config(text="データ取得中...")
                         dialog.update()
                         
-                        filename = self.data_exporter.export_all_data(format_type)
+                        if hasattr(self, 'data_exporter'):
+                            filename = self.data_exporter.export_all_data(format_type)
+                        else:
+                            filename = f"export_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.{format_type}"
                         
                         progress_var.set(75)
                         status_label.config(text="ファイル書き込み中...")
@@ -2580,7 +2887,7 @@ class BBSApplication:
         
         interval_scale = tk.Scale(
             interval_frame,
-            from_=30,
+            from_=10,
             to=300,
             orient=tk.HORIZONTAL,
             variable=self.interval_var,
@@ -2645,19 +2952,28 @@ class BBSApplication:
 バージョン: {APP_VERSION}
 ビルド: {APP_BUILD}
 作成者: {APP_AUTHOR}
-作成日: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+起動日時: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+■ 新機能（v3.1.0） ■
+✅ 投稿頻度大幅向上（5-15秒間隔）
+✅ ユーザー応答強化（即座反応システム）
+✅ 1366x768完全対応
+✅ バッチ投稿生成システム
+✅ 高頻度投稿スケジューラー
+✅ レスポンシブ最適化
 
 ■ 機能状況 ■
 ✅ 基本BBS機能
 ✅ AIペルソナシステム（100体）
 ✅ G4F + Gemini CLI対応
-✅ 自動投稿システム
+✅ 自動投稿システム（高頻度）
 ✅ 動的スレッド作成
 ✅ 呼びかけ応答機能
 ✅ データエクスポート機能
 ✅ 管理画面
 ✅ バージョン管理
 ✅ レスポンシブ対応
+✅ ユーザー名設定機能
 """
         
         version_display = scrolledtext.ScrolledText(
@@ -2665,7 +2981,7 @@ class BBSApplication:
             bg="#000000",
             fg="#00FF00",
             font=('MS Gothic', self.font_size - 1),
-            height=15,
+            height=18,
             state=tk.DISABLED
         )
         version_display.pack(fill=tk.BOTH, expand=True)
@@ -2737,6 +3053,7 @@ class BBSApplication:
                 stats_text.insert(tk.END, f"アプリケーション情報:\n")
                 stats_text.insert(tk.END, f"  バージョン: {APP_VERSION}\n")
                 stats_text.insert(tk.END, f"  ビルド: {APP_BUILD}\n")
+                stats_text.insert(tk.END, f"  現在のユーザー名: {self.current_username}\n")
                 stats_text.insert(tk.END, f"  起動時刻: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
                 
                 stats_text.insert(tk.END, f"コンテンツ統計:\n")
@@ -2792,6 +3109,13 @@ class BBSApplication:
                     stats_text.insert(tk.END, f"  スレッド数: {len(cat_threads)}\n")
                     stats_text.insert(tk.END, f"  投稿数: {cat_posts}\n")
                     stats_text.insert(tk.END, f"  閲覧数: {cat_views}\n")
+                
+                # 高頻度投稿システム統計
+                stats_text.insert(tk.END, f"\n■ 高頻度投稿システム統計 ■\n")
+                if hasattr(self, 'post_scheduler'):
+                    scheduled_count = len(self.post_scheduler.scheduled_posts)
+                    stats_text.insert(tk.END, f"  スケジュール済み投稿: {scheduled_count}件\n")
+                    stats_text.insert(tk.END, f"  システム稼働状況: {'稼働中' if self.post_scheduler.is_running else '停止中'}\n")
                 
                 stats_text.config(state=tk.DISABLED)
                 
@@ -2923,10 +3247,11 @@ class BBSApplication:
             # 基本情報
             details += "基本情報:\n"
             details += f"  年齢: {getattr(persona, 'age', '不明')}歳\n"
-            details += f"  職業: {getattr(persona, 'occupation', '不明')}\n"
-            details += f"  世代: {getattr(persona, 'generation', '不明')}\n"
+            details += f"  性別: {getattr(persona.gender, 'value', '不明') if hasattr(persona, 'gender') else '不明'}\n"
+            details += f"  職業: {getattr(persona.work, 'occupation', '不明') if hasattr(persona, 'work') else '不明'}\n"
+            details += f"  世代: {getattr(persona.generation, 'value', '不明') if hasattr(persona, 'generation') else '不明'}\n"
             details += f"  MBTI: {getattr(persona, 'mbti', '不明')}\n"
-            details += f"  タイプ: {'荒らし' if getattr(persona, 'is_troll', False) else '通常'}\n"
+            details += f"  タイプ: {'荒らし' if getattr(persona.special, 'personality_type', None) and persona.special.personality_type.value == '荒らし' else '通常'}\n"
             details += f"  背景: {getattr(persona, 'background', '不明')}\n\n"
             
             # 性格特性
@@ -2958,16 +3283,6 @@ class BBSApplication:
                 details += f"  平静: {getattr(e, 'calmness', 0):.2f}\n"
                 details += f"  自信: {getattr(e, 'confidence', 0):.2f}\n\n"
             
-            # タイピング特性
-            if hasattr(persona, 'typing'):
-                t = persona.typing
-                details += "タイピング特性:\n"
-                details += f"  速度: {getattr(t, 'speed', '不明')}\n"
-                details += f"  文体: {getattr(t, 'sentence_style', '不明')}\n"
-                details += f"  丁寧さ: {getattr(t, 'politeness_level', '不明')}\n"
-                details += f"  誤字率: {getattr(t, 'error_rate', 0):.2%}\n"
-                details += f"  絵文字使用率: {getattr(t, 'emoji_usage', 0):.2%}\n\n"
-            
             # 活動統計
             details += "活動統計:\n"
             details += f"  投稿数: {getattr(persona, 'post_count', 0)}\n"
@@ -2981,14 +3296,6 @@ class BBSApplication:
                     details += f"  最終投稿: {last_post_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
             else:
                 details += "  最終投稿: なし\n"
-            
-            # 学習データ
-            if hasattr(persona, 'memory'):
-                m = persona.memory
-                details += "\n学習データ:\n"
-                details += f"  記憶数: {len(getattr(m, 'memories', []))}\n"
-                details += f"  トピック嗜好数: {len(getattr(m, 'topic_preferences', {}))}\n"
-                details += f"  語彙使用数: {len(getattr(m, 'vocabulary_usage', {}))}\n"
             
             return details
             
@@ -3045,13 +3352,6 @@ class BBSApplication:
         
         ttk.Button(
             import_button_frame,
-            text="CSVインポート",
-            command=lambda: self.import_csv_data(),
-            style='BBS.TButton'
-        ).pack(side=tk.LEFT, padx=(0, 5))
-        
-        ttk.Button(
-            import_button_frame,
             text="設定復元",
             command=lambda: self.restore_settings(),
             style='BBS.TButton'
@@ -3063,13 +3363,6 @@ class BBSApplication:
         
         cleanup_button_frame = ttk.Frame(cleanup_section, style='BBS.TFrame')
         cleanup_button_frame.pack(fill=tk.X, padx=10, pady=10)
-        
-        ttk.Button(
-            cleanup_button_frame,
-            text="古い投稿削除",
-            command=lambda: self.cleanup_old_posts(),
-            style='BBS.TButton'
-        ).pack(side=tk.LEFT, padx=(0, 5))
         
         ttk.Button(
             cleanup_button_frame,
@@ -3127,15 +3420,15 @@ class BBSApplication:
         
         ttk.Button(
             size_buttons,
-            text="800x600",
-            command=lambda: self.set_window_size(800, 600),
+            text="1024x768",
+            command=lambda: self.set_window_size(1024, 768),
             style='BBS.TButton'
         ).pack(side=tk.LEFT, padx=(0, 5))
         
         ttk.Button(
             size_buttons,
-            text="1024x768",
-            command=lambda: self.set_window_size(1024, 768),
+            text="1366x768",
+            command=lambda: self.set_window_size(1366, 768),
             style='BBS.TButton'
         ).pack(side=tk.LEFT, padx=(0, 5))
         
@@ -3152,33 +3445,6 @@ class BBSApplication:
             command=lambda: self.set_window_size(1400, 900),
             style='BBS.TButton'
         ).pack(side=tk.LEFT)
-        
-        # AI設定セクション
-        ai_settings_section = ttk.LabelFrame(settings_frame, text="AI設定", style='BBS.TFrame')
-        ai_settings_section.pack(fill=tk.X, padx=10, pady=10)
-        
-        ai_settings_frame = ttk.Frame(ai_settings_section, style='BBS.TFrame')
-        ai_settings_frame.pack(fill=tk.X, padx=10, pady=10)
-        
-        ttk.Label(ai_settings_frame, text="タイムアウト設定:", style='BBS.TLabel').pack(anchor=tk.W)
-        
-        timeout_frame = ttk.Frame(ai_settings_frame, style='BBS.TFrame')
-        timeout_frame.pack(anchor=tk.W, pady=5)
-        
-        timeout_var = tk.IntVar(value=30)
-        timeout_scale = tk.Scale(
-            timeout_frame,
-            from_=10,
-            to=60,
-            orient=tk.HORIZONTAL,
-            variable=timeout_var,
-            bg="#000080",
-            fg="#FFFFFF",
-            length=200
-        )
-        timeout_scale.pack(side=tk.LEFT)
-        
-        ttk.Label(timeout_frame, text="秒", style='BBS.TLabel').pack(side=tk.LEFT, padx=(5, 0))
         
         # 保存ボタン
         save_frame = ttk.Frame(settings_frame, style='BBS.TFrame')
@@ -3202,12 +3468,19 @@ class BBSApplication:
     def set_ai_activity(self, enabled: bool):
         """AI活動設定"""
         self.ai_activity_enabled = enabled
+        if hasattr(self, 'post_scheduler'):
+            if enabled:
+                if not self.post_scheduler.is_running:
+                    self.post_scheduler.start_high_frequency_posting()
+            else:
+                self.post_scheduler.stop()
         self.update_status()
         logger.info(f"[ADMIN] AI活動: {'有効' if enabled else '無効'}")
     
     def update_interval(self, value):
         """投稿間隔更新"""
         self.auto_post_interval = int(value)
+        self.ai_status_label.config(text=f"投稿間隔: {self.auto_post_interval}秒")
         logger.info(f"[APP] 投稿間隔変更: {self.auto_post_interval}秒")
     
     def reset_database(self):
@@ -3453,11 +3726,6 @@ class BBSApplication:
             logger.error(f"[ADMIN] バックアップ復元エラー: {e}")
             messagebox.showerror("エラー", f"バックアップ復元に失敗しました: {e}")
     
-    def import_csv_data(self):
-        """CSVデータインポート"""
-        # 実装: CSVインポート機能
-        messagebox.showinfo("情報", "CSVインポート機能は次回アップデートで実装予定です。")
-    
     def restore_settings(self):
         """設定復元"""
         try:
@@ -3477,11 +3745,6 @@ class BBSApplication:
         except Exception as e:
             logger.error(f"[ADMIN] 設定復元エラー: {e}")
             messagebox.showerror("エラー", f"設定復元に失敗しました: {e}")
-    
-    def cleanup_old_posts(self):
-        """古い投稿削除"""
-        # 実装: 古い投稿のクリーンアップ
-        messagebox.showinfo("情報", "古い投稿削除機能は次回アップデートで実装予定です。")
     
     def cleanup_log_files(self):
         """ログファイル整理"""
@@ -3533,6 +3796,7 @@ class BBSApplication:
             self.root.geometry(f"{width}x{height}")
             self.window_width = width
             self.window_height = height
+            self.adjust_responsive_layout()
             self.save_settings()
             logger.info(f"[APP] ウィンドウサイズ変更: {width}x{height}")
         except Exception as e:
@@ -3554,10 +3818,11 @@ class BBSApplication:
             if messagebox.askyesno("確認", "設定をリセットしますか？\n全ての設定がデフォルト値に戻ります。"):
                 # デフォルト値に戻す
                 self.font_size = 12
-                self.window_width = 1200
-                self.window_height = 800
-                self.auto_post_interval = 60
+                self.window_width = 1366
+                self.window_height = 768
+                self.auto_post_interval = 30
                 self.ai_activity_enabled = True
+                self.current_username = "あなた"
                 
                 # UI更新
                 self.root.geometry(f"{self.window_width}x{self.window_height}")
@@ -3579,27 +3844,258 @@ class BBSApplication:
             
             status_text = f"Version: {APP_VERSION} | Build: {APP_BUILD} | {ai_status} | "
             status_text += f"AI活動: {'ON' if self.ai_activity_enabled else 'OFF'} | "
-            status_text += f"間隔: {self.auto_post_interval}秒"
-            
-            # ペルソナ数とスレッド数も表示
-            if hasattr(self.persona_manager, 'personas'):
-                persona_count = len(self.persona_manager.personas)
-                status_text += f" | ペルソナ: {persona_count}体"
-            
-            if hasattr(self, 'current_threads'):
-                thread_count = len(self.current_threads)
-                status_text += f" | スレッド: {thread_count}本"
+            status_text += f"ユーザー: {self.current_username}"
             
             self.status_label.config(text=status_text)
+            
+            # AI活動状況の更新
+            if hasattr(self, 'ai_status_label'):
+                self.ai_status_label.config(text=f"投稿間隔: {self.auto_post_interval}秒")
             
         except Exception as e:
             logger.error(f"[APP] ステータス更新エラー: {e}")
     
-    def start_auto_posting(self):
-        """自動投稿システム開始 - 完全版"""
+    def start_enhanced_auto_posting(self):
+        """拡張自動投稿システム開始"""
+        # 高頻度投稿スケジューラー開始
+        self.post_scheduler.start_high_frequency_posting()
+        
+        # 従来の自動投稿システムも継続（バックアップとして）
+        self.start_traditional_auto_posting()
+        
+        logger.info("[APP] 拡張自動投稿システム開始")
+    
+    def start_traditional_auto_posting(self):
+        """従来の自動投稿システム開始（バックアップ用）"""
+        def auto_post_worker():
+            """従来の自動投稿ワーカー"""
+            logger.info("[AUTO_POST] 従来システム開始")
+            
+            while True:
+                try:
+                    if not self.ai_activity_enabled:
+                        time.sleep(30)
+                        continue
+                    
+                    # 全スレッドを取得
+                    main_categories = self.category_manager.get_main_categories()
+                    all_threads = []
+                    for cat in main_categories:
+                        threads = self.thread_manager.get_threads_by_category(cat["id"])
+                        all_threads.extend(threads)
+                    
+                    if not all_threads:
+                        time.sleep(60)
+                        continue
+                    
+                    # 投稿候補スレッドを選出
+                    candidate_threads = []
+                    for thread in all_threads:
+                        # ロックされたスレッドはスキップ
+                        if thread.get('is_locked', False):
+                            continue
+                        
+                        thread_id = thread['thread_id']
+                        seconds_since_last_ai_post = self.thread_manager.get_seconds_since_last_ai_post(thread_id)
+                        
+                        # 投稿間隔チェック（従来システムは長めの間隔）
+                        if seconds_since_last_ai_post >= (self.auto_post_interval * 2):
+                            probability = min(0.3, 0.1 + (seconds_since_last_ai_post - self.auto_post_interval) * 0.001)
+                            
+                            if random.random() < probability:
+                                candidate_threads.append({
+                                    'thread_id': thread_id,
+                                    'thread_info': thread,
+                                    'seconds_since': seconds_since_last_ai_post,
+                                    'priority': seconds_since_last_ai_post + random.uniform(0, 30)
+                                })
+                    
+                    if not candidate_threads:
+                        time.sleep(random.uniform(60, 120))
+                        continue
+                    
+                    # 上位1-2スレッドに投稿
+                    candidate_threads.sort(key=lambda x: x['priority'], reverse=True)
+                    max_posts = min(len(candidate_threads), random.choice([1, 2]))
+                    
+                    for i in range(max_posts):
+                        if i < len(candidate_threads):
+                            candidate = candidate_threads[i]
+                            thread_id = candidate['thread_id']
+                            
+                            # ペルソナによる投稿生成
+                            if hasattr(self.persona_manager, 'generate_auto_post'):
+                                success = self.persona_manager.generate_auto_post(thread_id)
+                                
+                                if success:
+                                    # UI更新をメインスレッドに依頼
+                                    self.message_queue.put(('update_display', None))
+                                    logger.info(f"[AUTO_POST] 従来システム投稿成功: Thread {thread_id}")
+                                    
+                                    # 投稿間隔
+                                    post_interval = random.uniform(30, 60)
+                                    time.sleep(post_interval)
+                    
+                    # 次のチェックまでの待機時間
+                    check_interval = random.uniform(120, 300)
+                    time.sleep(check_interval)
+                    
+                except Exception as e:
+                    logger.error(f"[AUTO_POST] 従来システムエラー: {e}")
+                    time.sleep(60)
+        
+        # 従来の自動投稿スレッドを開始
+        traditional_thread = threading.Thread(target=auto_post_worker, daemon=True)
+        traditional_thread.start()
+    
+    def process_messages(self):
+        """メッセージキュー処理 - 完全版"""
+        try:
+            processed_count = 0
+            max_process = 10  # 一度に処理する最大メッセージ数
+            
+            while processed_count < max_process:
+                try:
+                    message_type, data = self.message_queue.get_nowait()
+                    processed_count += 1
+                    
+                    if message_type == 'update_display':
+                        # 表示更新
+                        if self.current_thread_id:
+                            self.update_post_display()
+                        self.update_thread_list()
+                        self.update_status()
+                        
+                    elif message_type == 'show_notification':
+                        # 通知表示
+                        if isinstance(data, dict):
+                            messagebox.showinfo(data.get('title', '通知'), data.get('message', ''))
+                        else:
+                            messagebox.showinfo("通知", str(data))
+                    
+                    elif message_type == 'persona_update':
+                        # ペルソナ状態更新
+                        if hasattr(self.persona_manager, 'update_persona_status'):
+                            self.persona_manager.update_persona_status(data)
+                    
+                    elif message_type == 'thread_created':
+                        # 新規スレッド作成通知
+                        self.update_thread_list()
+                        if data and 'thread_id' in data:
+                            # 作成されたスレッドに移動
+                            for i, thread in enumerate(self.current_threads):
+                                if thread['thread_id'] == data['thread_id']:
+                                    self.thread_listbox.selection_clear(0, tk.END)
+                                    self.thread_listbox.selection_set(i)
+                                    self.current_thread_id = data['thread_id']
+                                    self.update_post_display()
+                                    break
+                    
+                    elif message_type == 'ai_response_generated':
+                        # AI応答生成完了通知
+                        if data and 'thread_id' in data and data['thread_id'] == self.current_thread_id:
+                            self.update_post_display()
+                    
+                    elif message_type == 'error':
+                        # エラー通知
+                        logger.error(f"[MESSAGE] エラーメッセージ: {data}")
+                        if data and 'show_user' in data and data['show_user']:
+                            messagebox.showerror("エラー", data.get('message', '不明なエラーが発生しました'))
+                    
+                    elif message_type == 'log':
+                        # ログメッセージ
+                        if data and 'level' in data and 'message' in data:
+                            level = data['level']
+                            message = data['message']
+                            if level == 'info':
+                                logger.info(f"[MESSAGE] {message}")
+                            elif level == 'warning':
+                                logger.warning(f"[MESSAGE] {message}")
+                            elif level == 'error':
+                                logger.error(f"[MESSAGE] {message}")
+                    
+                    else:
+                        logger.warning(f"[MESSAGE] 未知のメッセージタイプ: {message_type}")
+                        
+                except queue.Empty:
+                    break
+                except Exception as e:
+                    logger.error(f"[MESSAGE] メッセージ処理エラー: {e}")
+                    break
+                    
+        except Exception as e:
+            logger.error(f"[MESSAGE] メッセージキュー処理エラー: {e}")
+        
+        # 定期的にメッセージキューをチェック（レスポンシブ間隔）
+        if processed_count > 0:
+            # メッセージがあった場合は短い間隔で再チェック
+            self.root.after(200, self.process_messages)
+        else:
+            # メッセージがない場合は通常間隔
+            self.root.after(1000, self.process_messages)
+
+    def update_username(self):
+        """ユーザー名更新"""
+        try:
+            new_username = self.username_var.get().strip()
+            if new_username and new_username != self.current_username:
+                self.current_username = new_username
+                self.save_settings()
+                messagebox.showinfo("完了", f"ユーザー名を「{new_username}」に設定しました。")
+                logger.info(f"[APP] ユーザー名変更: {new_username}")
+            elif not new_username:
+                messagebox.showwarning("警告", "ユーザー名を入力してください。")
+        except Exception as e:
+            logger.error(f"[APP] ユーザー名更新エラー: {e}")
+            messagebox.showerror("エラー", "ユーザー名の更新に失敗しました。")
+
+    def verify_initialization(self):
+        """初期化状態を検証し、必要に応じて自動復旧"""
+        try:
+            # データベースの存在確認
+            if not os.path.exists("bbs_database.db"):
+                logger.warning("[INIT] データベースが存在しません。自動作成します。")
+                self.db_manager = DatabaseManager()
+            
+            # カテゴリの存在確認
+            main_categories = self.category_manager.get_main_categories()
+            if not main_categories:
+                logger.warning("[INIT] カテゴリが存在しません。自動作成します。")
+                self.category_manager.init_default_categories()
+                main_categories = self.category_manager.get_main_categories()
+            
+            # スレッドの存在確認
+            if main_categories:
+                threads = self.thread_manager.get_threads_by_category(main_categories[0]["id"])
+                if not threads:
+                    logger.warning("[INIT] スレッドが存在しません。自動作成します。")
+                    self.thread_manager.init_default_threads()
+            
+            # ペルソナの存在確認
+            if not hasattr(self.persona_manager, 'personas') or not self.persona_manager.personas:
+                logger.warning("[INIT] ペルソナが存在しません。自動作成します。")
+                self.persona_manager = PersonaManager(self.db_manager, self.ai_manager)
+            
+            logger.info("[INIT] 初期化状態の検証が完了しました。")
+            
+        except Exception as e:
+            logger.error(f"[INIT] 初期化検証エラー: {e}")
+
+    def start_enhanced_auto_posting(self):
+        """拡張自動投稿システム開始"""
+        # 高頻度投稿スケジューラー開始
+        self.post_scheduler.start_high_frequency_posting()
+        
+        # 従来の自動投稿システムも並行稼働
+        self.start_traditional_auto_posting()
+        
+        logger.info("[APP] 拡張自動投稿システム開始完了")
+
+    def start_traditional_auto_posting(self):
+        """従来の自動投稿システム"""
         def auto_post_worker():
             """自動投稿ワーカー - 拡張版"""
-            logger.info("[AUTO_POST] 自動投稿システム開始")
+            logger.info("[AUTO_POST] 従来システム開始")
             
             while True:
                 try:
@@ -3706,94 +4202,619 @@ class BBSApplication:
         # 自動投稿スレッドを開始
         auto_post_thread = threading.Thread(target=auto_post_worker, daemon=True)
         auto_post_thread.start()
-        logger.info("[APP] 自動投稿システム開始完了")
-    
-    def process_messages(self):
-        """メッセージキュー処理 - 完全版"""
+        logger.info("[APP] 従来自動投稿システム開始完了")
+
+    def on_category_select(self, event):
+        """カテゴリ選択イベント - 強化版"""
         try:
-            processed_count = 0
-            max_process = 10  # 一度に処理する最大メッセージ数
+            selection = self.category_listbox.curselection()
+            if not selection:
+                logger.warning("[APP] カテゴリが選択されていません")
+                return
             
-            while processed_count < max_process:
-                try:
-                    message_type, data = self.message_queue.get_nowait()
-                    processed_count += 1
-                    
-                    if message_type == 'update_display':
-                        # 表示更新
-                        if self.current_thread_id:
-                            self.update_post_display()
-                        self.update_thread_list()
-                        self.update_status()
-                        
-                    elif message_type == 'show_notification':
-                        # 通知表示
-                        if isinstance(data, dict):
-                            messagebox.showinfo(data.get('title', '通知'), data.get('message', ''))
-                        else:
-                            messagebox.showinfo("通知", str(data))
-                    
-                    elif message_type == 'persona_update':
-                        # ペルソナ状態更新
-                        if hasattr(self.persona_manager, 'update_persona_status'):
-                            self.persona_manager.update_persona_status(data)
-                    
-                    elif message_type == 'thread_created':
-                        # 新規スレッド作成通知
-                        self.update_thread_list()
-                        if data and 'thread_id' in data:
-                            # 作成されたスレッドに移動
-                            for i, thread in enumerate(self.current_threads):
-                                if thread['thread_id'] == data['thread_id']:
-                                    self.thread_listbox.selection_clear(0, tk.END)
-                                    self.thread_listbox.selection_set(i)
-                                    self.current_thread_id = data['thread_id']
-                                    self.update_post_display()
-                                    break
-                    
-                    elif message_type == 'ai_response_generated':
-                        # AI応答生成完了通知
-                        if data and 'thread_id' in data and data['thread_id'] == self.current_thread_id:
-                            self.update_post_display()
-                    
-                    elif message_type == 'error':
-                        # エラー通知
-                        logger.error(f"[MESSAGE] エラーメッセージ: {data}")
-                        if data and 'show_user' in data and data['show_user']:
-                            messagebox.showerror("エラー", data.get('message', '不明なエラーが発生しました'))
-                    
-                    elif message_type == 'log':
-                        # ログメッセージ
-                        if data and 'level' in data and 'message' in data:
-                            level = data['level']
-                            message = data['message']
-                            if level == 'info':
-                                logger.info(f"[MESSAGE] {message}")
-                            elif level == 'warning':
-                                logger.warning(f"[MESSAGE] {message}")
-                            elif level == 'error':
-                                logger.error(f"[MESSAGE] {message}")
-                    
-                    else:
-                        logger.warning(f"[MESSAGE] 未知のメッセージタイプ: {message_type}")
-                        
-                except queue.Empty:
+            category_name = self.category_listbox.get(selection[0])
+            logger.info(f"[APP] カテゴリ選択: {category_name}")
+            
+            # カテゴリIDを取得
+            main_categories = self.category_manager.get_main_categories()
+            for category in main_categories:
+                if category["name"] == category_name:
+                    self.current_main_category_id = category["id"]
+                    logger.info(f"[APP] カテゴリID設定: {self.current_main_category_id}")
                     break
-                except Exception as e:
-                    logger.error(f"[MESSAGE] メッセージ処理エラー: {e}")
-                    break
-                    
+            
+            if self.current_main_category_id:
+                # スレッド一覧を強制更新
+                self.update_thread_list()
+                self.clear_post_selection()
+            else:
+                logger.error(f"[APP] カテゴリIDが見つかりません: {category_name}")
+                
         except Exception as e:
-            logger.error(f"[MESSAGE] メッセージキュー処理エラー: {e}")
+            logger.error(f"[APP] カテゴリ選択エラー: {e}")
+
+    def on_thread_select(self, event):
+        """スレッド選択イベント - 強化版"""
+        try:
+            selection = self.thread_listbox.curselection()
+            if not selection:
+                return
+            
+            thread_index = selection[0]
+            if thread_index < len(self.current_threads):
+                thread = self.current_threads[thread_index]
+                self.current_thread_id = thread['thread_id']
+                
+                # スレッド情報を更新
+                self.update_thread_info(thread)
+                
+                # 投稿表示を更新
+                self.update_post_display()
+                
+                # 投稿選択をクリア
+                self.clear_post_selection()
+                
+                logger.info(f"[APP] スレッド選択: {self.current_thread_id} - {thread['title']}")
+                
+        except Exception as e:
+            logger.error(f"[APP] スレッド選択エラー: {e}")
+
+    def on_thread_double_click(self, event):
+        """スレッドダブルクリックイベント"""
+        # スレッド詳細表示や編集機能を実装可能
+        pass
+
+    def on_post_click(self, event):
+        """投稿クリックイベント"""
+        try:
+            # クリック位置から投稿IDを特定
+            index = self.post_display.index(tk.INSERT)
+            
+            # 投稿選択状態を更新
+            self.update_post_selection()
+            
+        except Exception as e:
+            logger.error(f"[APP] 投稿クリックエラー: {e}")
+
+    def update_thread_info(self, thread: Dict):
+        """スレッド情報表示更新"""
+        try:
+            info_text = f"📌 {thread['title']} "
+            
+            if thread['is_pinned']:
+                info_text += "[固定] "
+            if thread['is_locked']:
+                info_text += "[ロック] "
+            
+            info_text += f"(投稿: {thread['post_count']}, 閲覧: {thread['view_count']}) "
+            info_text += f"作成者: {thread['created_by']}"
+            
+            self.thread_info_label.config(text=info_text)
+            
+        except Exception as e:
+            logger.error(f"[APP] スレッド情報更新エラー: {e}")
+
+    def clear_post_selection(self):
+        """投稿選択クリア"""
+        self.selected_post_id = None
+
+    def update_post_selection(self):
+        """投稿選択更新"""
+        # 実際の実装では、クリック位置から投稿IDを特定
+        # ここでは簡易実装
+        self.selected_post_id = 1  # 仮の値
+
+    def update_thread_list(self):
+        """スレッド一覧更新 - 拡張版"""
+        if not self.current_main_category_id:
+            logger.warning("[APP] カテゴリIDが設定されていません")
+            return
         
-        # 定期的にメッセージキューをチェック（レスポンシブ間隔）
-        if processed_count > 0:
-            # メッセージがあった場合は短い間隔で再チェック
-            self.root.after(200, self.process_messages)
-        else:
-            # メッセージがない場合は通常間隔
-            self.root.after(1000, self.process_messages)
-    
+        try:
+            # リストボックスをクリア
+            self.thread_listbox.delete(0, tk.END)
+            
+            # デバッグ：カテゴリ情報を確認
+            logger.debug(f"[APP] スレッド取得開始 - カテゴリID: {self.current_main_category_id}")
+            
+            # スレッド一覧を取得
+            self.current_threads = self.thread_manager.get_threads_by_category(self.current_main_category_id)
+            
+            # デバッグ：取得結果を確認
+            logger.debug(f"[APP] 取得されたスレッド数: {len(self.current_threads)}")
+            
+            if not self.current_threads:
+                # データが無い場合は強制的にデフォルトスレッドを作成
+                logger.warning("[APP] スレッドが存在しません。デフォルトスレッドを作成します。")
+                self.thread_manager.init_default_threads()
+                self.current_threads = self.thread_manager.get_threads_by_category(self.current_main_category_id)
+            
+            # スレッドをリストボックスに追加
+            for thread in self.current_threads:
+                prefix = ""
+                if thread['is_pinned']:
+                    prefix += "📌 "
+                if thread['is_locked']:
+                    prefix += "🔒 "
+                
+                display_text = f"{prefix}[{thread['thread_id']}] {thread['sub_category_name']}: {thread['title']} ({thread['post_count']})"
+                
+                # 文字数制限（リストボックス幅に合わせて調整）
+                if len(display_text) > 50:
+                    display_text = display_text[:47] + "..."
+                
+                self.thread_listbox.insert(tk.END, display_text)
+                logger.debug(f"[APP] スレッド追加: {display_text}")
+            
+            # 最初のスレッドを自動選択
+            if self.current_threads:
+                self.thread_listbox.selection_set(0)
+                self.current_thread_id = self.current_threads[0]['thread_id']
+                self.update_thread_info(self.current_threads[0])
+                self.update_post_display()
+                logger.debug(f"[APP] 初期スレッド選択: {self.current_thread_id}")
+            
+            # UI更新を強制実行
+            self.thread_listbox.update()
+            
+        except Exception as e:
+            logger.error(f"[APP] スレッド一覧更新エラー: {e}")
+            # エラー時は空のメッセージを表示
+            self.thread_listbox.insert(tk.END, "スレッドの読み込みに失敗しました")
+
+    def update_post_display(self):
+        """投稿表示更新 - 完全版"""
+        if not self.current_thread_id:
+            logger.warning("[APP] スレッドIDが設定されていません")
+            return
+        
+        try:
+            # 投稿データを取得
+            posts = self.thread_manager.get_thread_posts(self.current_thread_id)
+            
+            # 表示エリアをクリア
+            self.post_display.config(state=tk.NORMAL)
+            self.post_display.delete(1.0, tk.END)
+            
+            if not posts:
+                self.post_display.insert(tk.END, "まだ投稿がありません。\n最初の投稿をお待ちしています！")
+                self.post_display.config(state=tk.DISABLED)
+                return
+            
+            # 投稿を表示
+            for i, post in enumerate(posts):
+                self.display_single_post(i + 1, post)
+            
+            # タグ設定
+            self.configure_post_display_tags()
+            
+            self.post_display.config(state=tk.DISABLED)
+            self.post_display.see(tk.END)
+            
+            logger.debug(f"[APP] 投稿表示更新完了: Thread {self.current_thread_id}, {len(posts)}件")
+            
+        except Exception as e:
+            logger.error(f"[APP] 投稿表示更新エラー: {e}")
+            self.post_display.config(state=tk.NORMAL)
+            self.post_display.delete(1.0, tk.END)
+            self.post_display.insert(tk.END, f"投稿の読み込みに失敗しました: {e}")
+            self.post_display.config(state=tk.DISABLED)
+
+    def display_single_post(self, post_number: int, post: Dict):
+        """単一投稿の表示"""
+        try:
+            timestamp = post['posted_at']
+            name = post['persona_name']
+            content = post['content']
+            is_user = post['is_user_post']
+            is_edited = post.get('is_edited', False)
+            mentions = post.get('mention_names', '')
+            
+            # 投稿番号とタイムスタンプ
+            self.post_display.insert(tk.END, f"{post_number:3d}: ", "number")
+            self.post_display.insert(tk.END, f"{timestamp}\n", "timestamp")
+            
+            # 投稿者名（ユーザーとAIで色分け）
+            name_tag = "user_name" if is_user else "ai_name"
+            self.post_display.insert(tk.END, f" {name}", name_tag)
+            
+            # 編集マークとメンションマーク
+            if is_edited:
+                self.post_display.insert(tk.END, " [編集済み]", "edited_mark")
+            if mentions:
+                self.post_display.insert(tk.END, f" →@{mentions}", "mention_mark")
+            
+            self.post_display.insert(tk.END, "\n", "name")
+            
+            # 投稿内容をフォーマットして表示
+            formatted_content = self.format_post_content(content)
+            content_tag = "user_content" if is_user else "ai_content"
+            self.post_display.insert(tk.END, f" {formatted_content}\n\n", content_tag)
+            
+        except Exception as e:
+            logger.error(f"[APP] 投稿表示エラー: {e}")
+            self.post_display.insert(tk.END, f" [投稿表示エラー: {e}]\n\n", "error")
+
+    def configure_post_display_tags(self):
+        """投稿表示のタグ設定"""
+        try:
+            # 基本タグ
+            self.post_display.tag_configure("number", foreground="#808080", font=('MS Gothic', self.font_size - 2))
+            self.post_display.tag_configure("timestamp", foreground="#808080", font=('MS Gothic', self.font_size - 2))
+            
+            # 名前タグ
+            self.post_display.tag_configure("user_name", foreground="#00FFFF", font=('MS Gothic', self.font_size, 'bold'))
+            self.post_display.tag_configure("ai_name", foreground="#FFFF00", font=('MS Gothic', self.font_size, 'bold'))
+            
+            # 内容タグ
+            self.post_display.tag_configure("user_content", foreground="#FFFFFF", font=('MS Gothic', self.font_size))
+            self.post_display.tag_configure("ai_content", foreground="#00FF00", font=('MS Gothic', self.font_size))
+            
+            # 特殊マーク
+            self.post_display.tag_configure("edited_mark", foreground="#FF8080", font=('MS Gothic', self.font_size - 2))
+            self.post_display.tag_configure("mention_mark", foreground="#FF80FF", font=('MS Gothic', self.font_size - 2))
+            self.post_display.tag_configure("error", foreground="#FF0000", font=('MS Gothic', self.font_size - 1))
+            
+        except Exception as e:
+            logger.error(f"[APP] タグ設定エラー: {e}")
+
+    def format_post_content(self, content: str) -> str:
+        """投稿内容のフォーマット - 強化版"""
+        if not content:
+            return ""
+        
+        lines = []
+        current_line = ""
+        
+        for char in content:
+            if char == '\n':
+                if current_line:
+                    lines.append(current_line)
+                    current_line = ""
+                lines.append("")
+            else:
+                current_line += char
+                # 45文字程度で改行（PC-98風）
+                if len(current_line) >= 45 and char in ['。', '！', '？', '、', ' ']:
+                    lines.append(current_line)
+                    current_line = ""
+        
+        if current_line:
+            lines.append(current_line)
+        
+        # 行頭にスペースを追加してインデント
+        formatted_lines = []
+        for line in lines:
+            if line.strip():
+                formatted_lines.append(line)
+            else:
+                formatted_lines.append("")
+        
+        return '\n '.join(formatted_lines)
+
+    def submit_post(self):
+        """投稿送信 - ユーザー応答強化版"""
+        if not self.current_thread_id:
+            messagebox.showwarning("警告", "スレッドが選択されていません。")
+            return
+        
+        content = self.post_input.get(1.0, tk.END).strip()
+        if not content:
+            messagebox.showwarning("警告", "投稿内容を入力してください。")
+            return
+        
+        try:
+            # メンション処理
+            mention_name = self.mention_var.get().strip()
+            if mention_name:
+                content = f"@{mention_name} {content}"
+            
+            # ユーザー投稿として追加
+            success = self.thread_manager.add_post(
+                self.current_thread_id,
+                self.current_username,
+                content,
+                is_user_post=True
+            )
+            
+            if success:
+                # 入力欄をクリア
+                self.post_input.delete(1.0, tk.END)
+                self.mention_var.set("")
+                
+                # 表示更新
+                self.update_post_display()
+                self.update_thread_list()
+                self.update_status()
+                
+                # ペルソナに学習データとして記録
+                if hasattr(self.persona_manager, 'record_user_interaction'):
+                    self.persona_manager.record_user_interaction(self.current_thread_id, content)
+                
+                # **ユーザー投稿への積極的返答をトリガー**
+                self.user_response_manager.trigger_user_responses(self.current_username, content, self.current_thread_id)
+                
+                logger.info(f"[APP] ユーザー投稿完了: {self.current_username} -> Thread {self.current_thread_id}")
+            else:
+                messagebox.showerror("エラー", "投稿に失敗しました。")
+                
+        except Exception as e:
+            logger.error(f"[APP] 投稿送信エラー: {e}")
+            messagebox.showerror("エラー", f"投稿中にエラーが発生しました: {e}")
+
+    def show_create_thread_dialog(self):
+        """スレッド作成ダイアログ表示"""
+        if not self.current_main_category_id:
+            messagebox.showwarning("警告", "カテゴリを選択してください。")
+            return
+        
+        dialog = tk.Toplevel(self.root)
+        dialog.title("新規スレッド作成")
+        dialog.geometry("500x300")
+        dialog.configure(bg="#000000")
+        dialog.resizable(False, False)
+        
+        # モーダルに設定
+        dialog.transient(self.root)
+        dialog.grab_set()
+        
+        # 小分類選択
+        sub_cat_frame = ttk.Frame(dialog, style='BBS.TFrame')
+        sub_cat_frame.pack(fill=tk.X, padx=10, pady=10)
+        
+        ttk.Label(sub_cat_frame, text="小分類:", style='BBS.TLabel').pack(anchor=tk.W)
+        
+        sub_categories = self.category_manager.get_sub_categories(self.current_main_category_id)
+        sub_cat_var = tk.StringVar()
+        
+        sub_cat_combo = ttk.Combobox(
+            sub_cat_frame,
+            textvariable=sub_cat_var,
+            values=[cat["name"] for cat in sub_categories],
+            state="readonly",
+            width=40
+        )
+        sub_cat_combo.pack(fill=tk.X, pady=5)
+        
+        if sub_categories:
+            sub_cat_combo.set(sub_categories[0]["name"])
+        
+        # タイトル入力
+        title_frame = ttk.Frame(dialog, style='BBS.TFrame')
+        title_frame.pack(fill=tk.X, padx=10, pady=5)
+        
+        ttk.Label(title_frame, text="スレッドタイトル:", style='BBS.TLabel').pack(anchor=tk.W)
+        
+        title_entry = tk.Entry(
+            title_frame,
+            bg="#000080",
+            fg="#FFFFFF",
+            font=('MS Gothic', self.font_size),
+            width=50
+        )
+        title_entry.pack(fill=tk.X, pady=5)
+        title_entry.focus()
+        
+        # 説明入力
+        desc_frame = ttk.Frame(dialog, style='BBS.TFrame')
+        desc_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        
+        ttk.Label(desc_frame, text="説明（任意）:", style='BBS.TLabel').pack(anchor=tk.W)
+        
+        desc_text = tk.Text(
+            desc_frame,
+            bg="#000080",
+            fg="#FFFFFF",
+            font=('MS Gothic', self.font_size),
+            height=5,
+            wrap=tk.WORD
+        )
+        desc_text.pack(fill=tk.BOTH, expand=True, pady=5)
+        
+        # ボタン
+        button_frame = ttk.Frame(dialog, style='BBS.TFrame')
+        button_frame.pack(fill=tk.X, padx=10, pady=10)
+        
+        def create_thread():
+            try:
+                title = title_entry.get().strip()
+                description = desc_text.get(1.0, tk.END).strip()
+                sub_cat_name = sub_cat_var.get()
+                
+                if not title:
+                    messagebox.showwarning("警告", "スレッドタイトルを入力してください。")
+                    return
+                
+                if not sub_cat_name:
+                    messagebox.showwarning("警告", "小分類を選択してください。")
+                    return
+                
+                # 小分類IDを取得
+                sub_cat_id = None
+                for cat in sub_categories:
+                    if cat["name"] == sub_cat_name:
+                        sub_cat_id = cat["id"]
+                        break
+                
+                if not sub_cat_id:
+                    messagebox.showerror("エラー", "小分類の取得に失敗しました。")
+                    return
+                
+                # スレッド作成
+                thread_id = self.thread_manager.create_thread_safe(
+                    self.current_main_category_id,
+                    sub_cat_id,
+                    title,
+                    description,
+                    self.current_username
+                )
+                
+                if thread_id > 0:
+                    messagebox.showinfo("成功", f"スレッド「{title}」を作成しました。")
+                    dialog.destroy()
+                    
+                    # スレッド一覧を更新
+                    self.update_thread_list()
+                    
+                    # 作成したスレッドを選択
+                    for i, thread in enumerate(self.current_threads):
+                        if thread['thread_id'] == thread_id:
+                            self.thread_listbox.selection_clear(0, tk.END)
+                            self.thread_listbox.selection_set(i)
+                            self.current_thread_id = thread_id
+                            self.update_thread_info(thread)
+                            self.update_post_display()
+                            break
+                else:
+                    messagebox.showerror("エラー", "スレッドの作成に失敗しました。")
+                    
+            except Exception as e:
+                logger.error(f"[APP] スレッド作成エラー: {e}")
+                messagebox.showerror("エラー", f"スレッド作成中にエラーが発生しました: {e}")
+        
+        ttk.Button(
+            button_frame,
+            text="作成",
+            command=create_thread,
+            style='BBS.TButton'
+        ).pack(side=tk.LEFT, padx=(0, 10))
+        
+        ttk.Button(
+            button_frame,
+            text="キャンセル",
+            command=dialog.destroy,
+            style='BBS.TButton'
+        ).pack(side=tk.LEFT)
+        
+        # Enterキーでスレッド作成
+        dialog.bind('<Return>', lambda e: create_thread())
+        dialog.bind('<Escape>', lambda e: dialog.destroy())
+
+    def refresh_display(self):
+        """表示更新 - 完全版"""
+        try:
+            # 全体的な更新
+            self.update_thread_list()
+            self.update_post_display()
+            self.update_status()
+            
+            # ペルソナ情報更新
+            if hasattr(self.persona_manager, 'update_all_personas'):
+                self.persona_manager.update_all_personas()
+            
+            logger.info("[APP] 表示更新完了")
+            
+        except Exception as e:
+            logger.error(f"[APP] 表示更新エラー: {e}")
+            messagebox.showerror("エラー", f"表示更新中にエラーが発生しました: {e}")
+
+    def toggle_admin_mode(self):
+        """管理モード切り替え"""
+        self.admin_mode = not self.admin_mode
+        self.update_status()
+        if self.admin_mode:
+            self.show_admin_panel()
+        logger.info(f"[APP] 管理モード: {'ON' if self.admin_mode else 'OFF'}")
+
+    def show_admin_panel(self):
+        """管理パネル表示 - 簡易版"""
+        admin_window = tk.Toplevel(self.root)
+        admin_window.title(f"管理パネル - {APP_NAME} v{APP_VERSION}")
+        admin_window.geometry("800x600")
+        admin_window.configure(bg="#000000")
+        
+        # 簡易管理機能
+        control_frame = ttk.Frame(admin_window, style='BBS.TFrame')
+        control_frame.pack(fill=tk.X, padx=10, pady=10)
+        
+        ttk.Label(control_frame, text="■ システム制御 ■", style='BBS.TLabel',
+                  font=('MS Gothic', self.font_size, 'bold')).pack(anchor=tk.W)
+        
+        # AI活動制御
+        ai_frame = ttk.Frame(control_frame, style='BBS.TFrame')
+        ai_frame.pack(fill=tk.X, pady=10)
+        
+        ttk.Button(
+            ai_frame,
+            text="AI活動 ON",
+            command=lambda: self.set_ai_activity(True),
+            style='BBS.TButton'
+        ).pack(side=tk.LEFT, padx=(0, 5))
+        
+        ttk.Button(
+            ai_frame,
+            text="AI活動 OFF",
+            command=lambda: self.set_ai_activity(False),
+            style='BBS.TButton'
+        ).pack(side=tk.LEFT, padx=(0, 10))
+        
+        # 現在の状態表示
+        status_text = f"現在: {'有効' if self.ai_activity_enabled else '無効'} | 間隔: {self.auto_post_interval}秒"
+        ttk.Label(ai_frame, text=status_text, style='BBS.TLabel').pack(side=tk.LEFT, padx=(10, 0))
+
+    def set_ai_activity(self, enabled: bool):
+        """AI活動設定"""
+        self.ai_activity_enabled = enabled
+        self.update_status()
+        logger.info(f"[ADMIN] AI活動: {'有効' if enabled else '無効'}")
+
+    def update_status(self):
+        """ステータス更新 - 完全版"""
+        try:
+            connection_status = self.ai_manager.get_connection_status()
+            ai_status = f"AI: {connection_status.get('current_provider', 'なし')}"
+            
+            status_text = f"Version: {APP_VERSION} | Build: {APP_BUILD} | {ai_status} | "
+            status_text += f"AI活動: {'ON' if self.ai_activity_enabled else 'OFF'} | "
+            status_text += f"間隔: {self.auto_post_interval}秒"
+            
+            # ペルソナ数とスレッド数も表示
+            if hasattr(self.persona_manager, 'personas'):
+                persona_count = len(self.persona_manager.personas)
+                status_text += f" | ペルソナ: {persona_count}体"
+            
+            if hasattr(self, 'current_threads'):
+                thread_count = len(self.current_threads)
+                status_text += f" | スレッド: {thread_count}本"
+            
+            self.status_label.config(text=status_text)
+            
+            # AI活動状況も更新
+            if hasattr(self, 'ai_status_label'):
+                self.ai_status_label.config(text=f"投稿間隔: {self.auto_post_interval}秒")
+            
+        except Exception as e:
+            logger.error(f"[APP] ステータス更新エラー: {e}")
+
+    def setup_keybindings(self):
+        """キーバインド設定 - 拡張版"""
+        self.root.bind('<Control-Return>', lambda e: self.submit_post())
+        self.root.bind('<F5>', lambda e: self.refresh_display())
+        self.root.bind('<F12>', lambda e: self.toggle_admin_mode())
+        self.root.bind('<Control-q>', lambda e: self.root.quit())
+        self.root.bind('<Control-n>', lambda e: self.show_create_thread_dialog())
+        
+        # フォントサイズ調整
+        self.root.bind('<Control-plus>', lambda e: self.change_font_size(1))
+        self.root.bind('<Control-minus>', lambda e: self.change_font_size(-1))
+        self.root.bind('<Control-0>', lambda e: self.reset_font_size())
+        
+        logger.info("[APP] キーバインド設定完了")
+
+    def change_font_size(self, delta: int):
+        """フォントサイズ変更"""
+        new_size = max(8, min(20, self.font_size + delta))
+        if new_size != self.font_size:
+            self.font_size = new_size
+            self.adjust_responsive_layout()
+            self.save_settings()
+
+    def reset_font_size(self):
+        """フォントサイズリセット"""
+        self.font_size = 12
+        self.adjust_responsive_layout()
+        self.save_settings()
+
     def on_window_close(self):
         """ウィンドウクローズイベント"""
         try:
@@ -3801,6 +4822,10 @@ class BBSApplication:
             
             # AI活動停止
             self.ai_activity_enabled = False
+            
+            # スケジューラー停止
+            if hasattr(self, 'post_scheduler'):
+                self.post_scheduler.stop()
             
             # 設定保存
             self.save_settings()
@@ -3813,20 +4838,13 @@ class BBSApplication:
                 except Exception as e:
                     logger.error(f"[APP] ペルソナデータ保存エラー: {e}")
             
-            # データベース接続終了
-            try:
-                if hasattr(self.db_manager, 'close'):
-                    self.db_manager.close()
-            except Exception as e:
-                logger.error(f"[APP] データベース終了エラー: {e}")
-            
             logger.info("[APP] アプリケーション終了処理完了")
             
         except Exception as e:
             logger.error(f"[APP] 終了処理エラー: {e}")
         finally:
             self.root.destroy()
-    
+
     def run(self):
         """アプリケーション実行 - 完全版"""
         logger.info("[APP] アプリケーション開始")
@@ -3843,7 +4861,6 @@ class BBSApplication:
                     return
                 
                 logger.error(f"[APP] 未処理例外: {exc_type.__name__}: {exc_value}")
-                logger.error("".join(traceback.format_exception(exc_type, exc_value, exc_traceback)))
                 
                 # ユーザーに通知
                 messagebox.showerror(
@@ -3869,61 +4886,11 @@ class BBSApplication:
             logger.info("[APP] アプリケーション終了")
 
 # ==============================
-# ユーティリティ関数群
+# メイン実行部分
 # ==============================
 
-def check_dependencies():
-    """依存関係チェック"""
-    print("[SYSTEM] 依存関係チェック中...")
-    
-    # 必須ライブラリのチェック
-    required_modules = ['tkinter', 'sqlite3', 'threading', 'json', 'datetime', 'random', 're']
-    missing_modules = []
-    
-    for module in required_modules:
-        try:
-            __import__(module)
-            print(f"  ✅ {module}: OK")
-        except ImportError:
-            missing_modules.append(module)
-            print(f"  ❌ {module}: 不足")
-    
-    # オプションライブラリのチェック
-    optional_modules = [
-        ('g4f', 'G4F AI接続'),
-        ('subprocess', 'Gemini CLI接続')
-    ]
-    
-    for module, description in optional_modules:
-        try:
-            __import__(module)
-            print(f"  ✅ {module} ({description}): OK")
-        except ImportError:
-            print(f"  ⚠️ {module} ({description}): 利用不可")
-    
-    if missing_modules:
-        print(f"\n[ERROR] 必須モジュールが不足しています: {', '.join(missing_modules)}")
-        return False
-    
-    print("[SYSTEM] 依存関係チェック完了")
-    return True
-
-def setup_logging():
-    """ログ設定の詳細化"""
-    # ログファイルのローテーション
-    if os.path.exists('bbs_app.log'):
-        file_size = os.path.getsize('bbs_app.log')
-        if file_size > 10 * 1024 * 1024:  # 10MB以上の場合
-            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            shutil.move('bbs_app.log', f'bbs_app_old_{timestamp}.log')
-    
-    # ログレベルの設定
-    log_level = os.environ.get('BBS_LOG_LEVEL', 'INFO').upper()
-    numeric_level = getattr(logging, log_level, logging.INFO)
-    logging.getLogger().setLevel(numeric_level)
-
-def print_startup_info():
-    """起動時情報表示"""
+def main():
+    """メイン関数 - 完全版"""
     print("=" * 80)
     print(f"  {APP_NAME}")
     print(f"  Version: {APP_VERSION} (Build: {APP_BUILD})")
@@ -3931,146 +4898,13 @@ def print_startup_info():
     print(f"  起動日時: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)
     
-    print("\n[INFO] 主な機能:")
-    print(" ✅ PC-98風UI（ダークテーマ・緑文字）")
-    print(" ✅ 5大分類×5小分類の掲示板システム（25スレッド）")
-    print(" ✅ 100体のAIペルソナ（年代別特徴、Big Five性格モデル）")
-    print(" ✅ G4F + Gemini CLI対応（フォールバック機能付き）")
-    print(" ✅ 動的スレッド作成機能")
-    print(" ✅ 呼びかけ応答システム（@メンション対応）")
-    print(" ✅ 自動投稿システム（間隔調整可能）")
-    print(" ✅ 完全管理画面（ペルソナ詳細表示）")
-    print(" ✅ データエクスポート機能（JSON/CSV/バックアップ）")
-    print(" ✅ バージョン管理システム")
-    print(" ✅ レスポンシブ対応（600px以上推奨）")
-    print(" ✅ 学習機能付きペルソナ")
-    print(" ✅ 投稿編集・削除機能")
-    print(" ✅ 統計情報・アクティビティログ")
-    
-    print("\n[INFO] 技術仕様:")
-    print(f" 🐍 Python: {sys.version.split()[0]}")
-    print(f" 🗄️ データベース: SQLite3")
-    print(f" 🖼️ GUI: Tkinter (PC-98風テーマ)")
-    print(f" 🤖 AI: G4F + Gemini CLI")
-    print(f" 💾 データ形式: JSON/CSV/SQLite")
-    
-    print("\n[INFO] カテゴリ構成:")
-    categories = {
-        "雑談": ["日常の話", "最近の出来事", "天気の話", "グルメ情報", "地域情報"],
-        "ゲーム": ["レトロゲーム", "RPG", "アクションゲーム", "パズルゲーム", "新作ゲーム"],
-        "趣味": ["読書", "映画鑑賞", "音楽", "スポーツ", "旅行"],
-        "パソコン": ["ハードウェア", "ソフトウェア", "プログラミング", "インターネット", "トラブル相談"],
-        "仕事": ["転職相談", "スキルアップ", "職場の悩み", "副業", "資格取得"]
-    }
-    
-    for main_cat, sub_cats in categories.items():
-        print(f" 📁 {main_cat}: {', '.join(sub_cats)}")
-    
-    print("\n[INFO] ペルソナ構成:")
-    print(" 👴 1950s-60s世代（25名）: 60-75歳、戦後復興期育ち、慎重なタイピング")
-    print(" 👨 1970s-80s世代（25名）: 40-59歳、高度経済成長期育ち、ビジネス調の文体")
-    print(" 👩 1990s-2000s世代（25名）: 20-39歳、デジタルネイティブ、カジュアルな文体")
-    print(" 👦 2010s-20s世代（25名）: 10-19歳、SNS世代、短文・絵文字多用")
-    
-    print("\n[INFO] キーボード操作:")
-    shortcuts = [
-        ("Ctrl+Enter", "投稿"),
-        ("F5", "更新"),
-        ("F12", "管理モード"),
-        ("Ctrl+Q", "終了"),
-        ("Ctrl+N", "新規スレッド作成"),
-        ("Ctrl+E", "投稿編集"),
-        ("Delete", "投稿削除"),
-        ("Ctrl + / Ctrl -", "フォントサイズ調整"),
-        ("Ctrl+0", "フォントサイズリセット")
-    ]
-    
-    for shortcut, description in shortcuts:
-        print(f" ⌨️ {shortcut}: {description}")
-
-def check_system_requirements():
-    """システム要件チェック"""
-    print("\n[SYSTEM] システム要件チェック...")
-    
-    # Pythonバージョンチェック
-    python_version = sys.version_info
-    if python_version < (3, 7):
-        print(f"  ❌ Python: {python_version.major}.{python_version.minor} (要求: 3.7以上)")
-        return False
-    else:
-        print(f"  ✅ Python: {python_version.major}.{python_version.minor}.{python_version.micro}")
-    
-    # メモリチェック（概算）
-    try:
-        import psutil
-        memory = psutil.virtual_memory()
-        if memory.available < 512 * 1024 * 1024:  # 512MB
-            print(f"  ⚠️ 利用可能メモリ: {memory.available // (1024*1024)}MB (推奨: 512MB以上)")
-        else:
-            print(f"  ✅ 利用可能メモリ: {memory.available // (1024*1024)}MB")
-    except ImportError:
-        print("  ⚠️ メモリ情報取得不可（psutilモジュールなし）")
-    
-    # ディスク容量チェック
-    try:
-        disk_usage = shutil.disk_usage('.')
-        free_space_mb = disk_usage.free // (1024 * 1024)
-        if free_space_mb < 100:  # 100MB
-            print(f"  ⚠️ ディスク空き容量: {free_space_mb}MB (推奨: 100MB以上)")
-        else:
-            print(f"  ✅ ディスク空き容量: {free_space_mb}MB")
-    except Exception:
-        print("  ⚠️ ディスク容量情報取得不可")
-    
-    print("[SYSTEM] システム要件チェック完了")
-    return True
-
-def create_sample_data():
-    """サンプルデータ作成（デバッグ用）"""
-    print("[DEBUG] サンプルデータ作成中...")
-    
-    try:
-        # 開発・テスト用のサンプル投稿を生成
-        sample_posts = [
-            "こんにちは！初めて投稿します。よろしくお願いします。",
-            "今日はいい天気ですね。散歩日和です。",
-            "最近読んだ本がとても面白かったです。",
-            "新しいゲームを始めました。RPGは時間を忘れてしまいます。",
-            "プログラミングの勉強をしています。難しいですが楽しいです。"
-        ]
-        
-        print(f"  サンプル投稿: {len(sample_posts)}件準備")
-        print("[DEBUG] サンプルデータ作成完了")
-        
-        return sample_posts
-        
-    except Exception as e:
-        print(f"[DEBUG] サンプルデータ作成エラー: {e}")
-        return []
-
-def main():
-    """メイン関数 - 完全版"""
-    # 基本情報表示
-    print_startup_info()
-    
-    # システム要件チェック
-    if not check_system_requirements():
-        print("[ERROR] システム要件を満たしていません。")
-        sys.exit(1)
-    
-    # 依存関係チェック
-    if not check_dependencies():
-        print("[ERROR] 必須ライブラリが不足しています。")
-        sys.exit(1)
-    
-    # ログ設定
-    setup_logging()
-    
-    # デバッグモード判定
-    debug_mode = '--debug' in sys.argv or os.environ.get('BBS_DEBUG', '').lower() == 'true'
-    if debug_mode:
-        print("[DEBUG] デバッグモードで起動")
-        create_sample_data()
+    print("\n[INFO] 新機能:")
+    print(" ✅ 高頻度投稿システム（5-15秒間隔）")
+    print(" ✅ ユーザー名設定機能")
+    print(" ✅ 積極的ユーザー応答（3-12秒で反応）")
+    print(" ✅ 1366x768レスポンシブ対応")
+    print(" ✅ 投稿スケジューリング")
+    print(" ✅ バッチ投稿生成")
     
     try:
         print("\n[SYSTEM] アプリケーション初期化中...")
@@ -4093,21 +4927,18 @@ def main():
         else:
             print("  ❌ Gemini CLI: 利用不可")
         
-        if not connection_status['g4f_available'] and not connection_status['gemini_available']:
-            print("\n[WARNING] AI接続が利用できません。手動投稿のみとなります。")
-        
         # ペルソナ情報表示
         if hasattr(app.persona_manager, 'personas'):
             persona_count = len(app.persona_manager.personas)
             print(f"\n[INFO] ペルソナ: {persona_count}体のAIペルソナが生成されました")
         
-        print(f"\n[INFO] データベース: {app.db_manager.db_path}")
-        print(f"[INFO] 設定ファイル: bbs_settings.json")
-        print(f"[INFO] ログファイル: bbs_app.log")
+        print(f"\n[INFO] 高頻度投稿システム: 有効")
+        print(f"[INFO] 投稿間隔: {app.auto_post_interval}秒")
+        print(f"[INFO] ユーザー名: {app.current_username}")
         
         print("\n" + "=" * 80)
         print("  🚀 アプリケーション開始")
-        print("  👋 草の根BBSへようこそ！PC-98時代の雰囲気をお楽しみください")
+        print("  🎉 より活発な議論をお楽しみください！")
         print("  📝 F12キーで管理画面、Ctrl+Qで終了です")
         print("=" * 80)
         
@@ -4119,44 +4950,7 @@ def main():
     except Exception as e:
         print(f"\n[ERROR] アプリケーション開始エラー: {e}")
         logger.error(f"アプリケーション開始エラー: {e}")
-        
-        # エラー詳細をログに記録
-        import traceback
-        logger.error(f"エラー詳細: {traceback.format_exc()}")
-        
-        # ユーザーにエラー情報を表示
-        try:
-            import tkinter as tk
-            root = tk.Tk()
-            root.withdraw()  # メインウィンドウを隠す
-            messagebox.showerror(
-                "起動エラー",
-                f"アプリケーションの起動に失敗しました。\n\n"
-                f"エラー: {e}\n\n"
-                f"詳細はログファイル（bbs_app.log）を確認してください。"
-            )
-        except:
-            pass  # Tkinter が使えない場合は無視
-        
-        sys.exit(1)
-    
-    finally:
-        print("\n[SYSTEM] アプリケーション終了")
-
-# ==============================
-# プログラムエントリーポイント
-# ==============================
 
 if __name__ == "__main__":
-    # 必要なモジュールのインポート
-    import traceback
-    
-    try:
-        main()
-    except Exception as e:
-        print(f"\n[FATAL ERROR] 予期しないエラーが発生しました: {e}")
-        print("=" * 80)
-        traceback.print_exc()
-        print("=" * 80)
-        input("Enterキーを押して終了してください...")
-        sys.exit(1)
+    main()
+

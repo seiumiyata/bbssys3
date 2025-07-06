@@ -354,3 +354,1359 @@
 2025-07-06 23:22:50,223 - INFO - [APP] アプリケーション終了処理開始
 2025-07-06 23:22:50,223 - INFO - [APP] アプリケーション終了処理完了
 2025-07-06 23:22:50,248 - INFO - [APP] アプリケーション終了
+2025-07-06 23:25:17,024 - INFO - [DB] バージョン履歴を初期化しました
+2025-07-06 23:25:17,024 - INFO - [DB] データベース初期化完了: bbs_database.db
+2025-07-06 23:25:17,027 - INFO - [GEMINI] CLI利用可能: False
+2025-07-06 23:25:17,784 - INFO - [G4F] 利用可能: Chatai + gpt-3.5-turbo
+2025-07-06 23:25:18,399 - INFO - [G4F] 利用可能: Chatai + gpt-4
+2025-07-06 23:25:18,400 - WARNING - [G4F] テスト失敗: You + gpt-3.5-turbo - Model not found: gpt-3.5-turbo in: You Valid models: ['gpt-4o-mini', 'gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'grok-2', 'claude-3.5-sonnet', 'claude-3.5-haiku', 'claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku', 'llama-3.3-70b', 'llama-3.1-70b', 'llama-3', 'gemini-1-5-flash', 'gemini-1-5-pro', 'databricks-dbrx-instruct', 'command-r', 'command-r-plus', 'dolphin-2.5', 'agent', 'dall-e']
+2025-07-06 23:25:18,400 - INFO - [G4F] 使用組み合わせ: Chatai + gpt-3.5-turbo
+2025-07-06 23:25:18,402 - INFO - [AI] 初期化完了 - G4F: True, Gemini: False
+2025-07-06 23:25:18,404 - INFO - [CATEGORY] カテゴリ管理初期化完了
+2025-07-06 23:25:18,418 - INFO - [THREAD] スレッド管理初期化完了
+2025-07-06 23:25:18,420 - INFO - [PERSONA_MGR] ペルソナテンプレート作成完了: 100体
+2025-07-06 23:25:18,423 - INFO - [PERSONA] 作成完了: 田中昭夫 (62歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,423 - INFO - [PERSONA] 作成完了: 佐藤和子 (73歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,424 - INFO - [PERSONA] 作成完了: 鈴木正雄 (65歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,424 - INFO - [PERSONA] 作成完了: 高橋花子 (73歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,426 - INFO - [PERSONA] 作成完了: 伊藤清 (72歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,426 - INFO - [PERSONA] 作成完了: 渡辺きみ子 (69歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,427 - INFO - [PERSONA] 作成完了: 山田勇 (74歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,428 - INFO - [PERSONA] 作成完了: 中村静江 (63歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,428 - INFO - [PERSONA] 作成完了: 小林茂 (63歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,429 - INFO - [PERSONA] 作成完了: 加藤文子 (73歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,429 - INFO - [PERSONA] 作成完了: 吉田忠 (73歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,430 - INFO - [PERSONA] 作成完了: 山本春子 (61歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,430 - INFO - [PERSONA] 作成完了: 佐々木義雄 (62歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,430 - INFO - [PERSONA] 作成完了: 松本千代子 (62歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,431 - INFO - [PERSONA] 作成完了: 木村博 (64歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,431 - INFO - [PERSONA] 作成完了: 井上美代子 (74歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,431 - INFO - [PERSONA] 作成完了: 林武夫 (61歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,432 - INFO - [PERSONA] 作成完了: 清水節子 (62歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,432 - INFO - [PERSONA] 作成完了: 森信夫 (62歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,432 - INFO - [PERSONA] 作成完了: 池田良子 (63歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,433 - INFO - [PERSONA] 作成完了: 橋本正 (69歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,433 - INFO - [PERSONA] 作成完了: 山口みどり (65歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,433 - INFO - [PERSONA] 作成完了: 石川健 (63歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,434 - INFO - [PERSONA] 作成完了: 前田恵子 (73歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,434 - INFO - [PERSONA] 作成完了: 藤田光雄 (62歳, 1950s-60s, ISFJ, 通常)
+2025-07-06 23:25:18,434 - INFO - [PERSONA] 作成完了: 山田健一 (46歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,434 - INFO - [PERSONA] 作成完了: 鈴木美紀 (53歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,435 - INFO - [PERSONA] 作成完了: 田中浩二 (58歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,435 - INFO - [PERSONA] 作成完了: 佐藤由美 (58歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,436 - INFO - [PERSONA] 作成完了: 高橋誠 (54歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,436 - INFO - [PERSONA] 作成完了: 伊藤恵子 (59歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,436 - INFO - [PERSONA] 作成完了: 渡辺隆 (47歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,436 - INFO - [PERSONA] 作成完了: 山本真理 (57歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,437 - INFO - [PERSONA] 作成完了: 中村修 (43歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,438 - INFO - [PERSONA] 作成完了: 小林順子 (46歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,438 - INFO - [PERSONA] 作成完了: 加藤明 (48歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,439 - INFO - [PERSONA] 作成完了: 吉田智子 (51歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,439 - INFO - [PERSONA] 作成完了: 佐々木勝 (47歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,440 - INFO - [PERSONA] 作成完了: 松本直美 (51歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,440 - INFO - [PERSONA] 作成完了: 木村進 (58歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,441 - INFO - [PERSONA] 作成完了: 井上裕子 (47歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,441 - INFO - [PERSONA] 作成完了: 林俊夫 (51歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,441 - INFO - [PERSONA] 作成完了: 清水典子 (40歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,442 - INFO - [PERSONA] 作成完了: 森雅彦 (55歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,442 - INFO - [PERSONA] 作成完了: 池田京子 (43歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,443 - INFO - [PERSONA] 作成完了: 橋本和夫 (56歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,443 - INFO - [PERSONA] 作成完了: 山口洋子 (41歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,444 - INFO - [PERSONA] 作成完了: 石川豊 (51歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,444 - INFO - [PERSONA] 作成完了: 前田美穂 (41歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,445 - INFO - [PERSONA] 作成完了: 藤田秀樹 (40歳, 1970s-80s, ISFJ, 通常)
+2025-07-06 23:25:18,445 - INFO - [PERSONA] 作成完了: 佐々木翔太 (23歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,446 - INFO - [PERSONA] 作成完了: 田村彩 (25歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,446 - INFO - [PERSONA] 作成完了: 山田拓也 (27歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,446 - INFO - [PERSONA] 作成完了: 鈴木愛美 (32歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,447 - INFO - [PERSONA] 作成完了: 田中大輔 (24歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,447 - INFO - [PERSONA] 作成完了: 佐藤麻衣 (33歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,447 - INFO - [PERSONA] 作成完了: 高橋亮 (23歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,448 - INFO - [PERSONA] 作成完了: 伊藤沙織 (39歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,448 - INFO - [PERSONA] 作成完了: 渡辺健太 (37歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,448 - INFO - [PERSONA] 作成完了: 山本香織 (30歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,449 - INFO - [PERSONA] 作成完了: 中村雄太 (25歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,449 - INFO - [PERSONA] 作成完了: 小林美咲 (34歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,449 - INFO - [PERSONA] 作成完了: 加藤翔 (39歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,450 - INFO - [PERSONA] 作成完了: 吉田優香 (39歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,450 - INFO - [PERSONA] 作成完了: 佐々木大樹 (27歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,450 - INFO - [PERSONA] 作成完了: 松本彩花 (28歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,451 - INFO - [PERSONA] 作成完了: 木村拓海 (31歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,451 - INFO - [PERSONA] 作成完了: 井上美穂 (26歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,452 - INFO - [PERSONA] 作成完了: 林翔平 (28歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,452 - INFO - [PERSONA] 作成完了: 清水愛 (26歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,452 - INFO - [PERSONA] 作成完了: 森大和 (27歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,453 - INFO - [PERSONA] 作成完了: 池田莉奈 (35歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,453 - INFO - [PERSONA] 作成完了: 橋本颯 (24歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,453 - INFO - [PERSONA] 作成完了: 山口美月 (34歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,454 - INFO - [PERSONA] 作成完了: 石川蓮 (30歳, 1990s-2000s, ISFJ, 通常)
+2025-07-06 23:25:18,455 - INFO - [PERSONA] 作成完了: 高橋陽翔 (14歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,455 - INFO - [PERSONA] 作成完了: 小林結愛 (16歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,456 - INFO - [PERSONA] 作成完了: 山田蒼空 (19歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,456 - INFO - [PERSONA] 作成完了: 鈴木心春 (15歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,456 - INFO - [PERSONA] 作成完了: 田中颯真 (13歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,457 - INFO - [PERSONA] 作成完了: 佐藤美桜 (17歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,457 - INFO - [PERSONA] 作成完了: 高橋湊 (18歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,458 - INFO - [PERSONA] 作成完了: 伊藤咲良 (19歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,459 - INFO - [PERSONA] 作成完了: 渡辺大翔 (17歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,460 - INFO - [PERSONA] 作成完了: 山本愛莉 (18歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,461 - INFO - [PERSONA] 作成完了: 中村悠人 (16歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,461 - INFO - [PERSONA] 作成完了: 小林花音 (16歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,462 - INFO - [PERSONA] 作成完了: 加藤陸斗 (18歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,462 - INFO - [PERSONA] 作成完了: 吉田莉子 (19歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,463 - INFO - [PERSONA] 作成完了: 佐々木蒼 (16歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,464 - INFO - [PERSONA] 作成完了: 松本心愛 (16歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,464 - INFO - [PERSONA] 作成完了: 木村海翔 (19歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,465 - INFO - [PERSONA] 作成完了: 井上美羽 (13歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,465 - INFO - [PERSONA] 作成完了: 林大雅 (14歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,465 - INFO - [PERSONA] 作成完了: 清水結菜 (18歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,466 - INFO - [PERSONA] 作成完了: 森蓮 (16歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,466 - INFO - [PERSONA] 作成完了: 池田心結 (16歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,466 - INFO - [PERSONA] 作成完了: 橋本翔太 (19歳, 2010s-20s, ISFJ, 通常)
+2025-07-06 23:25:18,467 - INFO - [PERSONA] 作成完了: 匿名の批評家 (30歳, 1990s-2000s, ISFJ, 荒らし)
+2025-07-06 23:25:18,467 - INFO - [PERSONA] 作成完了: 炎上マニア (25歳, 1990s-2000s, ISFJ, 荒らし)
+2025-07-06 23:25:18,467 - INFO - [PERSONA_MGR] 既存ペルソナ復元: 100体
+2025-07-06 23:25:18,467 - INFO - [PERSONA_MGR] 初期化完了: 100体のペルソナ
+2025-07-06 23:25:18,814 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:25:18,815 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:25:18,827 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:25:18,831 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:25:19,045 - INFO - [APP] キーバインド設定完了
+2025-07-06 23:25:19,047 - INFO - [INIT] 初期化状態の検証が完了しました。
+2025-07-06 23:25:19,048 - INFO - [AUTO_POST] 自動投稿システム開始
+2025-07-06 23:25:19,048 - INFO - [APP] 自動投稿システム開始完了
+2025-07-06 23:25:19,050 - INFO - [APP] アプリケーション初期化完了 - Version 3.0.0
+2025-07-06 23:25:19,051 - INFO - [APP] アプリケーション開始
+2025-07-06 23:25:19,052 - INFO - [APP] メインループ開始
+2025-07-06 23:25:19,072 - INFO - [AUTO_POST] 投稿対象選択: Thread 18 (プログラミングについて語りましょう) - 確率: 0.80
+2025-07-06 23:25:19,074 - ERROR - [DB] クエリ実行エラー: no such column: category_main
+2025-07-06 23:25:19,074 - WARNING - [AUTO_POST] 投稿失敗: Thread 18
+2025-07-06 23:25:19,075 - INFO - [AUTO_POST] 投稿対象選択: Thread 4 (グルメ情報について語りましょう) - 確率: 0.80
+2025-07-06 23:25:19,075 - ERROR - [DB] クエリ実行エラー: no such column: category_main
+2025-07-06 23:25:19,076 - WARNING - [AUTO_POST] 投稿失敗: Thread 4
+2025-07-06 23:25:19,076 - INFO - [AUTO_POST] 投稿サイクル完了: 0/2件投稿
+2025-07-06 23:25:27,027 - INFO - [APP] 管理モード: ON
+2025-07-06 23:25:36,536 - INFO - [APP] 投稿間隔変更: 59秒
+2025-07-06 23:25:36,547 - INFO - [APP] 投稿間隔変更: 54秒
+2025-07-06 23:25:36,558 - INFO - [APP] 投稿間隔変更: 47秒
+2025-07-06 23:25:36,570 - INFO - [APP] 投稿間隔変更: 38秒
+2025-07-06 23:25:36,581 - INFO - [APP] 投稿間隔変更: 30秒
+2025-07-06 23:25:39,686 - INFO - [ADMIN] AI活動: 有効
+2025-07-06 23:26:06,857 - INFO - [AUTO_POST] 投稿対象選択: Thread 17 (ソフトウェアについて語りましょう) - 確率: 0.80
+2025-07-06 23:26:06,858 - ERROR - [DB] クエリ実行エラー: no such column: category_main
+2025-07-06 23:26:06,858 - WARNING - [AUTO_POST] 投稿失敗: Thread 17
+2025-07-06 23:26:06,858 - INFO - [AUTO_POST] 投稿対象選択: Thread 7 (RPGについて語りましょう) - 確率: 0.80
+2025-07-06 23:26:06,858 - ERROR - [DB] クエリ実行エラー: no such column: category_main
+2025-07-06 23:26:06,859 - WARNING - [AUTO_POST] 投稿失敗: Thread 7
+2025-07-06 23:26:06,859 - INFO - [AUTO_POST] 投稿サイクル完了: 0/2件投稿
+2025-07-06 23:26:15,696 - INFO - [APP] スレッド選択: 2 - 最近の出来事について語りましょう
+2025-07-06 23:26:16,935 - INFO - [APP] カテゴリ選択: ゲーム
+2025-07-06 23:26:16,935 - INFO - [APP] カテゴリID設定: 2
+2025-07-06 23:26:16,936 - INFO - [APP] スレッド取得開始 - カテゴリID: 2
+2025-07-06 23:26:16,936 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:26:16,979 - INFO - [APP] 投稿表示更新完了: Thread 6, 1件
+2025-07-06 23:26:16,979 - INFO - [APP] 初期スレッド選択: 6
+2025-07-06 23:26:16,986 - INFO - [APP] 投稿表示更新完了: Thread 6, 1件
+2025-07-06 23:26:16,986 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:26:16,987 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:26:18,966 - INFO - [APP] スレッド選択: 7 - RPGについて語りましょう
+2025-07-06 23:26:19,464 - INFO - [APP] スレッド選択: 8 - アクションゲームについて語りましょう
+2025-07-06 23:26:19,904 - INFO - [APP] スレッド選択: 9 - パズルゲームについて語りましょう
+2025-07-06 23:26:20,308 - INFO - [APP] スレッド選択: 10 - 新作ゲームについて語りましょう
+2025-07-06 23:26:22,165 - INFO - [APP] スレッド選択: 8 - アクションゲームについて語りましょう
+2025-07-06 23:26:22,671 - INFO - [APP] スレッド選択: 9 - パズルゲームについて語りましょう
+2025-07-06 23:26:23,323 - INFO - [APP] 投稿表示更新完了: Thread 6, 1件
+2025-07-06 23:26:23,323 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:26:26,330 - INFO - [APP] アプリケーション終了処理開始
+2025-07-06 23:26:26,331 - INFO - [APP] アプリケーション終了処理完了
+2025-07-06 23:26:26,358 - INFO - [APP] アプリケーション終了
+2025-07-06 23:36:19,683 - INFO - [DB] バージョン履歴を初期化しました
+2025-07-06 23:36:19,684 - INFO - [DB] データベース初期化完了: bbs_database.db
+2025-07-06 23:36:19,685 - INFO - [GEMINI] CLI利用可能: False
+2025-07-06 23:36:20,641 - INFO - [G4F] 利用可能: Chatai + gpt-3.5-turbo
+2025-07-06 23:36:21,810 - INFO - [G4F] 利用可能: Chatai + gpt-4
+2025-07-06 23:36:21,811 - WARNING - [G4F] テスト失敗: You + gpt-3.5-turbo - Model not found: gpt-3.5-turbo in: You Valid models: ['gpt-4o-mini', 'gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'grok-2', 'claude-3.5-sonnet', 'claude-3.5-haiku', 'claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku', 'llama-3.3-70b', 'llama-3.1-70b', 'llama-3', 'gemini-1-5-flash', 'gemini-1-5-pro', 'databricks-dbrx-instruct', 'command-r', 'command-r-plus', 'dolphin-2.5', 'agent', 'dall-e']
+2025-07-06 23:36:21,811 - INFO - [G4F] 使用組み合わせ: Chatai + gpt-3.5-turbo
+2025-07-06 23:36:21,813 - INFO - [AI] 初期化完了 - G4F: True, Gemini: False
+2025-07-06 23:36:21,815 - INFO - [CATEGORY] カテゴリ管理初期化完了
+2025-07-06 23:36:21,825 - INFO - [THREAD] スレッド管理初期化完了
+2025-07-06 23:36:21,825 - INFO - [PERSONA] ペルソナ生成開始
+2025-07-06 23:36:21,825 - INFO - [PERSONA] 1950s-60s世代のペルソナ生成中...
+2025-07-06 23:36:21,828 - INFO - [PERSONA] 1970s-80s世代のペルソナ生成中...
+2025-07-06 23:36:21,831 - INFO - [PERSONA] 1990s-2000s世代のペルソナ生成中...
+2025-07-06 23:36:21,834 - INFO - [PERSONA] 2010s-20s世代のペルソナ生成中...
+2025-07-06 23:36:21,837 - INFO - [PERSONA] 総ペルソナ数: 100体
+2025-07-06 23:36:21,838 - ERROR - [PERSONA] ペルソナDB保存エラー (豊): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,839 - ERROR - [PERSONA] ペルソナDB保存エラー (節子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,841 - ERROR - [PERSONA] ペルソナDB保存エラー (誠): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,841 - ERROR - [PERSONA] ペルソナDB保存エラー (和子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,842 - ERROR - [PERSONA] ペルソナDB保存エラー (昭夫): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,843 - ERROR - [PERSONA] ペルソナDB保存エラー (信子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,844 - ERROR - [PERSONA] ペルソナDB保存エラー (誠6): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,845 - ERROR - [PERSONA] ペルソナDB保存エラー (洋子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,846 - ERROR - [PERSONA] ペルソナDB保存エラー (三郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,847 - ERROR - [PERSONA] ペルソナDB保存エラー (君子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,848 - ERROR - [PERSONA] ペルソナDB保存エラー (進): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,849 - ERROR - [PERSONA] ペルソナDB保存エラー (君子11): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,850 - ERROR - [PERSONA] ペルソナDB保存エラー (昭夫12): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,850 - ERROR - [PERSONA] ペルソナDB保存エラー (智子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,851 - ERROR - [PERSONA] ペルソナDB保存エラー (清): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,852 - ERROR - [PERSONA] ペルソナDB保存エラー (信子15): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,853 - ERROR - [PERSONA] ペルソナDB保存エラー (進16): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,854 - ERROR - [PERSONA] ペルソナDB保存エラー (光子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,854 - ERROR - [PERSONA] ペルソナDB保存エラー (次郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,855 - ERROR - [PERSONA] ペルソナDB保存エラー (文子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,856 - ERROR - [PERSONA] ペルソナDB保存エラー (三郎20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,857 - ERROR - [PERSONA] ペルソナDB保存エラー (静子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,858 - ERROR - [PERSONA] ペルソナDB保存エラー (昭夫22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,858 - ERROR - [PERSONA] ペルソナDB保存エラー (良子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,859 - ERROR - [PERSONA] ペルソナDB保存エラー (勝): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,860 - ERROR - [PERSONA] ペルソナDB保存エラー (徹): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,861 - ERROR - [PERSONA] ペルソナDB保存エラー (里美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,862 - ERROR - [PERSONA] ペルソナDB保存エラー (哲也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,862 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,863 - ERROR - [PERSONA] ペルソナDB保存エラー (晃): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,864 - ERROR - [PERSONA] ペルソナDB保存エラー (純子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,865 - ERROR - [PERSONA] ペルソナDB保存エラー (拓也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,866 - ERROR - [PERSONA] ペルソナDB保存エラー (美奈子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,866 - ERROR - [PERSONA] ペルソナDB保存エラー (亮): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,867 - ERROR - [PERSONA] ペルソナDB保存エラー (敦子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,868 - ERROR - [PERSONA] ペルソナDB保存エラー (誠二): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,869 - ERROR - [PERSONA] ペルソナDB保存エラー (陽子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,870 - ERROR - [PERSONA] ペルソナDB保存エラー (淳): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,871 - ERROR - [PERSONA] ペルソナDB保存エラー (亜紀): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,872 - ERROR - [PERSONA] ペルソナDB保存エラー (智): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,873 - ERROR - [PERSONA] ペルソナDB保存エラー (順子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,874 - ERROR - [PERSONA] ペルソナDB保存エラー (義明): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,874 - ERROR - [PERSONA] ペルソナDB保存エラー (法子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,875 - ERROR - [PERSONA] ペルソナDB保存エラー (善行): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,877 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美19): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,878 - ERROR - [PERSONA] ペルソナDB保存エラー (聡): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,879 - ERROR - [PERSONA] ペルソナDB保存エラー (久美子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,879 - ERROR - [PERSONA] ペルソナDB保存エラー (学): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,880 - ERROR - [PERSONA] ペルソナDB保存エラー (陽子23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,881 - ERROR - [PERSONA] ペルソナDB保存エラー (善行24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,882 - ERROR - [PERSONA] ペルソナDB保存エラー (航): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,883 - ERROR - [PERSONA] ペルソナDB保存エラー (由香): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,884 - ERROR - [PERSONA] ペルソナDB保存エラー (航2): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,884 - ERROR - [PERSONA] ペルソナDB保存エラー (理恵): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,885 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,886 - ERROR - [PERSONA] ペルソナDB保存エラー (真美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,887 - ERROR - [PERSONA] ペルソナDB保存エラー (颯太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,888 - ERROR - [PERSONA] ペルソナDB保存エラー (由香7): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,889 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,890 - ERROR - [PERSONA] ペルソナDB保存エラー (彩): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,890 - ERROR - [PERSONA] ペルソナDB保存エラー (拓海): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,891 - ERROR - [PERSONA] ペルソナDB保存エラー (亜美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,892 - ERROR - [PERSONA] ペルソナDB保存エラー (亮太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,893 - ERROR - [PERSONA] ペルソナDB保存エラー (香織): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,894 - ERROR - [PERSONA] ペルソナDB保存エラー (優斗): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,894 - ERROR - [PERSONA] ペルソナDB保存エラー (千春): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,895 - ERROR - [PERSONA] ペルソナDB保存エラー (大和): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,896 - ERROR - [PERSONA] ペルソナDB保存エラー (愛): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,897 - ERROR - [PERSONA] ペルソナDB保存エラー (拓海18): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,897 - ERROR - [PERSONA] ペルソナDB保存エラー (理恵19): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,898 - ERROR - [PERSONA] ペルソナDB保存エラー (健太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,899 - ERROR - [PERSONA] ペルソナDB保存エラー (梓): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,900 - ERROR - [PERSONA] ペルソナDB保存エラー (大輔): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,901 - ERROR - [PERSONA] ペルソナDB保存エラー (千春23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,902 - ERROR - [PERSONA] ペルソナDB保存エラー (駿): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,903 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,904 - ERROR - [PERSONA] ペルソナDB保存エラー (莉子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,905 - ERROR - [PERSONA] ペルソナDB保存エラー (翔太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,905 - ERROR - [PERSONA] ペルソナDB保存エラー (優奈): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,906 - ERROR - [PERSONA] ペルソナDB保存エラー (颯): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,907 - ERROR - [PERSONA] ペルソナDB保存エラー (詩織): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,908 - ERROR - [PERSONA] ペルソナDB保存エラー (翔太6): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,910 - ERROR - [PERSONA] ペルソナDB保存エラー (花音): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,911 - ERROR - [PERSONA] ペルソナDB保存エラー (翔太8): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,912 - ERROR - [PERSONA] ペルソナDB保存エラー (陽菜): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,912 - ERROR - [PERSONA] ペルソナDB保存エラー (航10): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,914 - ERROR - [PERSONA] ペルソナDB保存エラー (心春): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,914 - ERROR - [PERSONA] ペルソナDB保存エラー (伊織): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,915 - ERROR - [PERSONA] ペルソナDB保存エラー (詩織13): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,916 - ERROR - [PERSONA] ペルソナDB保存エラー (大翔): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,917 - ERROR - [PERSONA] ペルソナDB保存エラー (結菜): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,918 - ERROR - [PERSONA] ペルソナDB保存エラー (奏): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,918 - ERROR - [PERSONA] ペルソナDB保存エラー (愛梨): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,919 - ERROR - [PERSONA] ペルソナDB保存エラー (健太郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,920 - ERROR - [PERSONA] ペルソナDB保存エラー (愛莉): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,921 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,922 - ERROR - [PERSONA] ペルソナDB保存エラー (凛): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,923 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,924 - ERROR - [PERSONA] ペルソナDB保存エラー (凛23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,925 - ERROR - [PERSONA] ペルソナDB保存エラー (湊): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:36:21,925 - INFO - [PERSONA] 100体のペルソナを保存しました
+2025-07-06 23:36:21,925 - INFO - [PERSONA] 100体のペルソナを生成しました
+2025-07-06 23:36:22,187 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:36:22,187 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:36:22,196 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:36:22,199 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:36:22,356 - INFO - [APP] キーバインド設定完了
+2025-07-06 23:36:22,357 - INFO - [INIT] 初期化状態の検証が完了しました。
+2025-07-06 23:36:22,357 - INFO - [AUTO_POST] 自動投稿システム開始
+2025-07-06 23:36:22,358 - INFO - [APP] 自動投稿システム開始完了
+2025-07-06 23:36:22,358 - INFO - [APP] アプリケーション初期化完了 - Version 3.0.0
+2025-07-06 23:36:22,358 - INFO - [APP] アプリケーション開始
+2025-07-06 23:36:22,359 - INFO - [APP] メインループ開始
+2025-07-06 23:36:22,374 - INFO - [AUTO_POST] 投稿対象選択: Thread 9 (パズルゲームについて語りましょう) - 確率: 0.80
+2025-07-06 23:36:24,293 - INFO - [PERSONA] 自動投稿成功: 由香7 -> Thread 9
+2025-07-06 23:36:24,293 - INFO - [AUTO_POST] 投稿成功: Thread 9
+2025-07-06 23:36:24,368 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:36:24,368 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:36:24,374 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:36:39,440 - INFO - [AUTO_POST] 投稿サイクル完了: 1/1件投稿
+2025-07-06 23:36:40,787 - INFO - [APP] 管理モード: ON
+2025-07-06 23:36:46,026 - INFO - [APP] ウィンドウサイズ変更: 1024x768
+2025-07-06 23:36:47,400 - INFO - [APP] ウィンドウサイズ変更: 1200x800
+2025-07-06 23:37:02,430 - INFO - [ADMIN] 設定保存完了
+2025-07-06 23:37:07,771 - INFO - [APP] ウィンドウサイズ変更: 800x600
+2025-07-06 23:37:32,009 - INFO - [ADMIN] データベース最適化開始
+2025-07-06 23:37:34,699 - INFO - [ADMIN] データベース最適化完了
+2025-07-06 23:37:40,228 - INFO - [ADMIN] AI活動: 有効
+2025-07-06 23:37:42,571 - INFO - [APP] 投稿間隔変更: 56秒
+2025-07-06 23:37:42,579 - INFO - [APP] 投稿間隔変更: 52秒
+2025-07-06 23:37:42,588 - INFO - [APP] 投稿間隔変更: 49秒
+2025-07-06 23:37:42,599 - INFO - [APP] 投稿間隔変更: 47秒
+2025-07-06 23:37:42,608 - INFO - [APP] 投稿間隔変更: 45秒
+2025-07-06 23:37:42,617 - INFO - [APP] 投稿間隔変更: 42秒
+2025-07-06 23:37:42,627 - INFO - [APP] 投稿間隔変更: 40秒
+2025-07-06 23:37:42,637 - INFO - [APP] 投稿間隔変更: 38秒
+2025-07-06 23:37:42,647 - INFO - [APP] 投稿間隔変更: 36秒
+2025-07-06 23:37:42,659 - INFO - [APP] 投稿間隔変更: 34秒
+2025-07-06 23:37:42,667 - INFO - [APP] 投稿間隔変更: 32秒
+2025-07-06 23:37:42,676 - INFO - [APP] 投稿間隔変更: 30秒
+2025-07-06 23:37:53,055 - INFO - [ADMIN] データベース初期化開始
+2025-07-06 23:37:53,129 - INFO - [DB] バージョン履歴を初期化しました
+2025-07-06 23:37:53,129 - INFO - [DB] データベース初期化完了: bbs_database.db
+2025-07-06 23:37:53,272 - INFO - [CATEGORY] カテゴリ管理初期化完了
+2025-07-06 23:37:53,399 - INFO - [THREAD] スレッド管理初期化完了
+2025-07-06 23:37:53,399 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:37:53,400 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:37:53,406 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:37:55,117 - INFO - [ADMIN] データベース初期化完了
+2025-07-06 23:38:02,448 - INFO - [ADMIN] ペルソナ再生成開始
+2025-07-06 23:38:02,448 - INFO - [PERSONA] ペルソナ生成開始
+2025-07-06 23:38:02,448 - INFO - [PERSONA] 1950s-60s世代のペルソナ生成中...
+2025-07-06 23:38:02,456 - INFO - [PERSONA] 1970s-80s世代のペルソナ生成中...
+2025-07-06 23:38:02,462 - INFO - [PERSONA] 1990s-2000s世代のペルソナ生成中...
+2025-07-06 23:38:02,466 - INFO - [PERSONA] 2010s-20s世代のペルソナ生成中...
+2025-07-06 23:38:02,470 - INFO - [PERSONA] 総ペルソナ数: 100体
+2025-07-06 23:38:02,471 - ERROR - [PERSONA] ペルソナDB保存エラー (稔): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,472 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,473 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,474 - ERROR - [PERSONA] ペルソナDB保存エラー (春子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,476 - ERROR - [PERSONA] ペルソナDB保存エラー (太郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,477 - ERROR - [PERSONA] ペルソナDB保存エラー (和子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,478 - ERROR - [PERSONA] ペルソナDB保存エラー (明): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,478 - ERROR - [PERSONA] ペルソナDB保存エラー (美代子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,479 - ERROR - [PERSONA] ペルソナDB保存エラー (進): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,480 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子9): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,482 - ERROR - [PERSONA] ペルソナDB保存エラー (次郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,483 - ERROR - [PERSONA] ペルソナDB保存エラー (文子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,484 - ERROR - [PERSONA] ペルソナDB保存エラー (誠): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,485 - ERROR - [PERSONA] ペルソナDB保存エラー (節子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,486 - ERROR - [PERSONA] ペルソナDB保存エラー (実): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,487 - ERROR - [PERSONA] ペルソナDB保存エラー (智子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,488 - ERROR - [PERSONA] ペルソナDB保存エラー (博): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,489 - ERROR - [PERSONA] ペルソナDB保存エラー (春子17): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,489 - ERROR - [PERSONA] ペルソナDB保存エラー (進18): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,490 - ERROR - [PERSONA] ペルソナDB保存エラー (文子19): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,491 - ERROR - [PERSONA] ペルソナDB保存エラー (次郎20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,492 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,493 - ERROR - [PERSONA] ペルソナDB保存エラー (次郎22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,494 - ERROR - [PERSONA] ペルソナDB保存エラー (信子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,494 - ERROR - [PERSONA] ペルソナDB保存エラー (稔24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,495 - ERROR - [PERSONA] ペルソナDB保存エラー (正志): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,496 - ERROR - [PERSONA] ペルソナDB保存エラー (典子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,498 - ERROR - [PERSONA] ペルソナDB保存エラー (淳): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,499 - ERROR - [PERSONA] ペルソナDB保存エラー (真理): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,499 - ERROR - [PERSONA] ペルソナDB保存エラー (淳4): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,500 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,501 - ERROR - [PERSONA] ペルソナDB保存エラー (隆): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,502 - ERROR - [PERSONA] ペルソナDB保存エラー (亜紀): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,503 - ERROR - [PERSONA] ペルソナDB保存エラー (浩): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,503 - ERROR - [PERSONA] ペルソナDB保存エラー (久美子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,504 - ERROR - [PERSONA] ペルソナDB保存エラー (亮): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,505 - ERROR - [PERSONA] ペルソナDB保存エラー (順子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,506 - ERROR - [PERSONA] ペルソナDB保存エラー (健一): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,507 - ERROR - [PERSONA] ペルソナDB保存エラー (陽子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,508 - ERROR - [PERSONA] ペルソナDB保存エラー (智): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,508 - ERROR - [PERSONA] ペルソナDB保存エラー (順子15): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,509 - ERROR - [PERSONA] ペルソナDB保存エラー (徹): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,510 - ERROR - [PERSONA] ペルソナDB保存エラー (里美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,511 - ERROR - [PERSONA] ペルソナDB保存エラー (隆18): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,512 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,512 - ERROR - [PERSONA] ペルソナDB保存エラー (淳20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,513 - ERROR - [PERSONA] ペルソナDB保存エラー (久美子21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,514 - ERROR - [PERSONA] ペルソナDB保存エラー (浩22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,515 - ERROR - [PERSONA] ペルソナDB保存エラー (真理23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,516 - ERROR - [PERSONA] ペルソナDB保存エラー (浩24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,517 - ERROR - [PERSONA] ペルソナDB保存エラー (昌也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,518 - ERROR - [PERSONA] ペルソナDB保存エラー (優): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,518 - ERROR - [PERSONA] ペルソナDB保存エラー (祐介): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,519 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,520 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,521 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂5): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,522 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人6): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,522 - ERROR - [PERSONA] ペルソナDB保存エラー (舞): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,523 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人8): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,524 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理9): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,525 - ERROR - [PERSONA] ペルソナDB保存エラー (健太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,526 - ERROR - [PERSONA] ペルソナDB保存エラー (舞11): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,527 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,528 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理13): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,529 - ERROR - [PERSONA] ペルソナDB保存エラー (智也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,530 - ERROR - [PERSONA] ペルソナDB保存エラー (亜美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,530 - ERROR - [PERSONA] ペルソナDB保存エラー (雅人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,531 - ERROR - [PERSONA] ペルソナDB保存エラー (梓): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,532 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,533 - ERROR - [PERSONA] ペルソナDB保存エラー (瞳): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,533 - ERROR - [PERSONA] ペルソナDB保存エラー (昌也20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,534 - ERROR - [PERSONA] ペルソナDB保存エラー (亜美21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,535 - ERROR - [PERSONA] ペルソナDB保存エラー (翔): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,536 - ERROR - [PERSONA] ペルソナDB保存エラー (彩): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,536 - ERROR - [PERSONA] ペルソナDB保存エラー (健太24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,537 - ERROR - [PERSONA] ペルソナDB保存エラー (翔太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,538 - ERROR - [PERSONA] ペルソナDB保存エラー (愛梨): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,539 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,540 - ERROR - [PERSONA] ペルソナDB保存エラー (優奈): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,541 - ERROR - [PERSONA] ペルソナDB保存エラー (廉): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,541 - ERROR - [PERSONA] ペルソナDB保存エラー (咲良): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,542 - ERROR - [PERSONA] ペルソナDB保存エラー (陽翔): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,543 - ERROR - [PERSONA] ペルソナDB保存エラー (結菜): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,544 - ERROR - [PERSONA] ペルソナDB保存エラー (健太郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,545 - ERROR - [PERSONA] ペルソナDB保存エラー (凛): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,546 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太10): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,546 - ERROR - [PERSONA] ペルソナDB保存エラー (彩花): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,547 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮12): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,548 - ERROR - [PERSONA] ペルソナDB保存エラー (愛莉): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,549 - ERROR - [PERSONA] ペルソナDB保存エラー (心): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,549 - ERROR - [PERSONA] ペルソナDB保存エラー (美月): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,550 - ERROR - [PERSONA] ペルソナDB保存エラー (悠斗): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,551 - ERROR - [PERSONA] ペルソナDB保存エラー (優奈17): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,552 - ERROR - [PERSONA] ペルソナDB保存エラー (朝陽): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,552 - ERROR - [PERSONA] ペルソナDB保存エラー (莉子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,553 - ERROR - [PERSONA] ペルソナDB保存エラー (悠斗20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,554 - ERROR - [PERSONA] ペルソナDB保存エラー (優奈21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,555 - ERROR - [PERSONA] ペルソナDB保存エラー (心22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,555 - ERROR - [PERSONA] ペルソナDB保存エラー (結菜23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,556 - ERROR - [PERSONA] ペルソナDB保存エラー (奏): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:02,556 - INFO - [PERSONA] 100体のペルソナを保存しました
+2025-07-06 23:38:02,557 - INFO - [PERSONA] 100体のペルソナを生成しました
+2025-07-06 23:38:03,864 - INFO - [ADMIN] ペルソナ再生成完了
+2025-07-06 23:38:07,508 - INFO - [APP] スレッド選択: 2 - 最近の出来事について語りましょう
+2025-07-06 23:38:09,994 - INFO - [APP] スレッド選択: 1 - 日常の話について語りましょう
+2025-07-06 23:38:23,595 - INFO - [APP] アプリケーション終了処理開始
+2025-07-06 23:38:23,597 - ERROR - [PERSONA] ペルソナDB保存エラー (稔): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,598 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,600 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,601 - ERROR - [PERSONA] ペルソナDB保存エラー (春子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,602 - ERROR - [PERSONA] ペルソナDB保存エラー (太郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,604 - ERROR - [PERSONA] ペルソナDB保存エラー (和子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,605 - ERROR - [PERSONA] ペルソナDB保存エラー (明): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,605 - ERROR - [PERSONA] ペルソナDB保存エラー (美代子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,606 - ERROR - [PERSONA] ペルソナDB保存エラー (進): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,607 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子9): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,608 - ERROR - [PERSONA] ペルソナDB保存エラー (次郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,609 - ERROR - [PERSONA] ペルソナDB保存エラー (文子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,611 - ERROR - [PERSONA] ペルソナDB保存エラー (誠): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,612 - ERROR - [PERSONA] ペルソナDB保存エラー (節子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,613 - ERROR - [PERSONA] ペルソナDB保存エラー (実): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,614 - ERROR - [PERSONA] ペルソナDB保存エラー (智子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,615 - ERROR - [PERSONA] ペルソナDB保存エラー (博): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,616 - ERROR - [PERSONA] ペルソナDB保存エラー (春子17): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,616 - ERROR - [PERSONA] ペルソナDB保存エラー (進18): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,617 - ERROR - [PERSONA] ペルソナDB保存エラー (文子19): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,618 - ERROR - [PERSONA] ペルソナDB保存エラー (次郎20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,619 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,620 - ERROR - [PERSONA] ペルソナDB保存エラー (次郎22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,620 - ERROR - [PERSONA] ペルソナDB保存エラー (信子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,621 - ERROR - [PERSONA] ペルソナDB保存エラー (稔24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,622 - ERROR - [PERSONA] ペルソナDB保存エラー (正志): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,623 - ERROR - [PERSONA] ペルソナDB保存エラー (典子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,624 - ERROR - [PERSONA] ペルソナDB保存エラー (淳): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,624 - ERROR - [PERSONA] ペルソナDB保存エラー (真理): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,625 - ERROR - [PERSONA] ペルソナDB保存エラー (淳4): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,626 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,627 - ERROR - [PERSONA] ペルソナDB保存エラー (隆): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,628 - ERROR - [PERSONA] ペルソナDB保存エラー (亜紀): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,629 - ERROR - [PERSONA] ペルソナDB保存エラー (浩): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,629 - ERROR - [PERSONA] ペルソナDB保存エラー (久美子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,630 - ERROR - [PERSONA] ペルソナDB保存エラー (亮): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,631 - ERROR - [PERSONA] ペルソナDB保存エラー (順子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,632 - ERROR - [PERSONA] ペルソナDB保存エラー (健一): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,633 - ERROR - [PERSONA] ペルソナDB保存エラー (陽子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,633 - ERROR - [PERSONA] ペルソナDB保存エラー (智): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,634 - ERROR - [PERSONA] ペルソナDB保存エラー (順子15): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,635 - ERROR - [PERSONA] ペルソナDB保存エラー (徹): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,636 - ERROR - [PERSONA] ペルソナDB保存エラー (里美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,637 - ERROR - [PERSONA] ペルソナDB保存エラー (隆18): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,637 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,638 - ERROR - [PERSONA] ペルソナDB保存エラー (淳20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,639 - ERROR - [PERSONA] ペルソナDB保存エラー (久美子21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,640 - ERROR - [PERSONA] ペルソナDB保存エラー (浩22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,641 - ERROR - [PERSONA] ペルソナDB保存エラー (真理23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,641 - ERROR - [PERSONA] ペルソナDB保存エラー (浩24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,642 - ERROR - [PERSONA] ペルソナDB保存エラー (昌也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,643 - ERROR - [PERSONA] ペルソナDB保存エラー (優): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,644 - ERROR - [PERSONA] ペルソナDB保存エラー (祐介): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,645 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,645 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,646 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂5): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,647 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人6): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,648 - ERROR - [PERSONA] ペルソナDB保存エラー (舞): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,649 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人8): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,649 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理9): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,650 - ERROR - [PERSONA] ペルソナDB保存エラー (健太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,651 - ERROR - [PERSONA] ペルソナDB保存エラー (舞11): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,652 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,653 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理13): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,653 - ERROR - [PERSONA] ペルソナDB保存エラー (智也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,654 - ERROR - [PERSONA] ペルソナDB保存エラー (亜美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,655 - ERROR - [PERSONA] ペルソナDB保存エラー (雅人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,656 - ERROR - [PERSONA] ペルソナDB保存エラー (梓): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,657 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,657 - ERROR - [PERSONA] ペルソナDB保存エラー (瞳): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,658 - ERROR - [PERSONA] ペルソナDB保存エラー (昌也20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,659 - ERROR - [PERSONA] ペルソナDB保存エラー (亜美21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,660 - ERROR - [PERSONA] ペルソナDB保存エラー (翔): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,661 - ERROR - [PERSONA] ペルソナDB保存エラー (彩): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,661 - ERROR - [PERSONA] ペルソナDB保存エラー (健太24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,662 - ERROR - [PERSONA] ペルソナDB保存エラー (翔太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,663 - ERROR - [PERSONA] ペルソナDB保存エラー (愛梨): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,664 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,665 - ERROR - [PERSONA] ペルソナDB保存エラー (優奈): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,665 - ERROR - [PERSONA] ペルソナDB保存エラー (廉): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,666 - ERROR - [PERSONA] ペルソナDB保存エラー (咲良): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,667 - ERROR - [PERSONA] ペルソナDB保存エラー (陽翔): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,668 - ERROR - [PERSONA] ペルソナDB保存エラー (結菜): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,668 - ERROR - [PERSONA] ペルソナDB保存エラー (健太郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,669 - ERROR - [PERSONA] ペルソナDB保存エラー (凛): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,670 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太10): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,671 - ERROR - [PERSONA] ペルソナDB保存エラー (彩花): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,672 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮12): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,673 - ERROR - [PERSONA] ペルソナDB保存エラー (愛莉): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,674 - ERROR - [PERSONA] ペルソナDB保存エラー (心): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,675 - ERROR - [PERSONA] ペルソナDB保存エラー (美月): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,676 - ERROR - [PERSONA] ペルソナDB保存エラー (悠斗): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,677 - ERROR - [PERSONA] ペルソナDB保存エラー (優奈17): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,677 - ERROR - [PERSONA] ペルソナDB保存エラー (朝陽): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,678 - ERROR - [PERSONA] ペルソナDB保存エラー (莉子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,679 - ERROR - [PERSONA] ペルソナDB保存エラー (悠斗20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,680 - ERROR - [PERSONA] ペルソナDB保存エラー (優奈21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,680 - ERROR - [PERSONA] ペルソナDB保存エラー (心22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,681 - ERROR - [PERSONA] ペルソナDB保存エラー (結菜23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,682 - ERROR - [PERSONA] ペルソナDB保存エラー (奏): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:23,682 - INFO - [PERSONA] 100体のペルソナを保存しました
+2025-07-06 23:38:23,682 - INFO - [APP] ペルソナデータ保存完了
+2025-07-06 23:38:23,682 - INFO - [APP] アプリケーション終了処理完了
+2025-07-06 23:38:23,707 - INFO - [APP] アプリケーション終了
+2025-07-06 23:38:26,913 - INFO - [DB] バージョン履歴を初期化しました
+2025-07-06 23:38:26,914 - INFO - [DB] データベース初期化完了: bbs_database.db
+2025-07-06 23:38:26,915 - INFO - [GEMINI] CLI利用可能: False
+2025-07-06 23:38:27,938 - INFO - [G4F] 利用可能: Chatai + gpt-3.5-turbo
+2025-07-06 23:38:29,051 - INFO - [G4F] 利用可能: Chatai + gpt-4
+2025-07-06 23:38:29,052 - WARNING - [G4F] テスト失敗: You + gpt-3.5-turbo - Model not found: gpt-3.5-turbo in: You Valid models: ['gpt-4o-mini', 'gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'grok-2', 'claude-3.5-sonnet', 'claude-3.5-haiku', 'claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku', 'llama-3.3-70b', 'llama-3.1-70b', 'llama-3', 'gemini-1-5-flash', 'gemini-1-5-pro', 'databricks-dbrx-instruct', 'command-r', 'command-r-plus', 'dolphin-2.5', 'agent', 'dall-e']
+2025-07-06 23:38:29,052 - INFO - [G4F] 使用組み合わせ: Chatai + gpt-3.5-turbo
+2025-07-06 23:38:29,081 - INFO - [AI] 初期化完了 - G4F: True, Gemini: False
+2025-07-06 23:38:29,083 - INFO - [CATEGORY] カテゴリ管理初期化完了
+2025-07-06 23:38:29,093 - INFO - [THREAD] スレッド管理初期化完了
+2025-07-06 23:38:29,093 - INFO - [PERSONA] ペルソナ生成開始
+2025-07-06 23:38:29,093 - INFO - [PERSONA] 1950s-60s世代のペルソナ生成中...
+2025-07-06 23:38:29,097 - INFO - [PERSONA] 1970s-80s世代のペルソナ生成中...
+2025-07-06 23:38:29,100 - INFO - [PERSONA] 1990s-2000s世代のペルソナ生成中...
+2025-07-06 23:38:29,103 - INFO - [PERSONA] 2010s-20s世代のペルソナ生成中...
+2025-07-06 23:38:29,106 - INFO - [PERSONA] 総ペルソナ数: 100体
+2025-07-06 23:38:29,107 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,108 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,108 - ERROR - [PERSONA] ペルソナDB保存エラー (英雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,109 - ERROR - [PERSONA] ペルソナDB保存エラー (道子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,110 - ERROR - [PERSONA] ペルソナDB保存エラー (修): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,111 - ERROR - [PERSONA] ペルソナDB保存エラー (光子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,112 - ERROR - [PERSONA] ペルソナDB保存エラー (忠雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,113 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子7): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,114 - ERROR - [PERSONA] ペルソナDB保存エラー (和夫): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,115 - ERROR - [PERSONA] ペルソナDB保存エラー (春子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,116 - ERROR - [PERSONA] ペルソナDB保存エラー (正雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,116 - ERROR - [PERSONA] ペルソナDB保存エラー (光子11): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,117 - ERROR - [PERSONA] ペルソナDB保存エラー (和夫12): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,118 - ERROR - [PERSONA] ペルソナDB保存エラー (智子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,119 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄14): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,120 - ERROR - [PERSONA] ペルソナDB保存エラー (君子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,120 - ERROR - [PERSONA] ペルソナDB保存エラー (博): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,121 - ERROR - [PERSONA] ペルソナDB保存エラー (信子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,122 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄18): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,123 - ERROR - [PERSONA] ペルソナDB保存エラー (美代子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,123 - ERROR - [PERSONA] ペルソナDB保存エラー (誠): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,124 - ERROR - [PERSONA] ペルソナDB保存エラー (春子21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,125 - ERROR - [PERSONA] ペルソナDB保存エラー (明): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,126 - ERROR - [PERSONA] ペルソナDB保存エラー (道子23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,128 - ERROR - [PERSONA] ペルソナDB保存エラー (清): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,129 - ERROR - [PERSONA] ペルソナDB保存エラー (徹): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,130 - ERROR - [PERSONA] ペルソナDB保存エラー (裕子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,131 - ERROR - [PERSONA] ペルソナDB保存エラー (宏): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,132 - ERROR - [PERSONA] ペルソナDB保存エラー (真理): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,133 - ERROR - [PERSONA] ペルソナDB保存エラー (晃): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,134 - ERROR - [PERSONA] ペルソナDB保存エラー (順子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,135 - ERROR - [PERSONA] ペルソナDB保存エラー (徹6): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,135 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,136 - ERROR - [PERSONA] ペルソナDB保存エラー (善行): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,137 - ERROR - [PERSONA] ペルソナDB保存エラー (里美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,138 - ERROR - [PERSONA] ペルソナDB保存エラー (直樹): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,139 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,139 - ERROR - [PERSONA] ペルソナDB保存エラー (哲也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,140 - ERROR - [PERSONA] ペルソナDB保存エラー (康子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,141 - ERROR - [PERSONA] ペルソナDB保存エラー (淳): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,142 - ERROR - [PERSONA] ペルソナDB保存エラー (純子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,143 - ERROR - [PERSONA] ペルソナDB保存エラー (誠二): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,144 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美17): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,145 - ERROR - [PERSONA] ペルソナDB保存エラー (学): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,146 - ERROR - [PERSONA] ペルソナDB保存エラー (敦子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,146 - ERROR - [PERSONA] ペルソナDB保存エラー (徹20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,147 - ERROR - [PERSONA] ペルソナDB保存エラー (由美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,148 - ERROR - [PERSONA] ペルソナDB保存エラー (善行22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,149 - ERROR - [PERSONA] ペルソナDB保存エラー (恵美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,150 - ERROR - [PERSONA] ペルソナDB保存エラー (徹24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,150 - ERROR - [PERSONA] ペルソナDB保存エラー (颯太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,151 - ERROR - [PERSONA] ペルソナDB保存エラー (亜美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,152 - ERROR - [PERSONA] ペルソナDB保存エラー (駿): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,153 - ERROR - [PERSONA] ペルソナDB保存エラー (千春): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,154 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,155 - ERROR - [PERSONA] ペルソナDB保存エラー (絵美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,156 - ERROR - [PERSONA] ペルソナDB保存エラー (雅人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,156 - ERROR - [PERSONA] ペルソナDB保存エラー (理恵): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,157 - ERROR - [PERSONA] ペルソナDB保存エラー (拓海): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,158 - ERROR - [PERSONA] ペルソナDB保存エラー (瞳): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,159 - ERROR - [PERSONA] ペルソナDB保存エラー (陸): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,160 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂11): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,161 - ERROR - [PERSONA] ペルソナDB保存エラー (優斗): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,162 - ERROR - [PERSONA] ペルソナDB保存エラー (理恵13): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,163 - ERROR - [PERSONA] ペルソナDB保存エラー (雅人14): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,163 - ERROR - [PERSONA] ペルソナDB保存エラー (沙織): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,164 - ERROR - [PERSONA] ペルソナDB保存エラー (直人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,165 - ERROR - [PERSONA] ペルソナDB保存エラー (彩): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,166 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,167 - ERROR - [PERSONA] ペルソナDB保存エラー (愛): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,167 - ERROR - [PERSONA] ペルソナDB保存エラー (佑介): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,168 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,169 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,170 - ERROR - [PERSONA] ペルソナDB保存エラー (加奈): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,170 - ERROR - [PERSONA] ペルソナDB保存エラー (昌也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,171 - ERROR - [PERSONA] ペルソナDB保存エラー (航): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,172 - ERROR - [PERSONA] ペルソナDB保存エラー (千尋): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,173 - ERROR - [PERSONA] ペルソナDB保存エラー (湊): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,174 - ERROR - [PERSONA] ペルソナDB保存エラー (美羽): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,175 - ERROR - [PERSONA] ペルソナDB保存エラー (健太郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,176 - ERROR - [PERSONA] ペルソナDB保存エラー (陽菜): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,176 - ERROR - [PERSONA] ペルソナDB保存エラー (翔太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,177 - ERROR - [PERSONA] ペルソナDB保存エラー (柚希): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,178 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人8): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,179 - ERROR - [PERSONA] ペルソナDB保存エラー (凛): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,180 - ERROR - [PERSONA] ペルソナDB保存エラー (優斗10): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,181 - ERROR - [PERSONA] ペルソナDB保存エラー (美羽11): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,182 - ERROR - [PERSONA] ペルソナDB保存エラー (朝陽): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,183 - ERROR - [PERSONA] ペルソナDB保存エラー (優奈): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,184 - ERROR - [PERSONA] ペルソナDB保存エラー (優斗14): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,184 - ERROR - [PERSONA] ペルソナDB保存エラー (愛莉): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,185 - ERROR - [PERSONA] ペルソナDB保存エラー (心): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,186 - ERROR - [PERSONA] ペルソナDB保存エラー (柚希17): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,187 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,188 - ERROR - [PERSONA] ペルソナDB保存エラー (柚希19): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,189 - ERROR - [PERSONA] ペルソナDB保存エラー (朝陽20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,189 - ERROR - [PERSONA] ペルソナDB保存エラー (美咲): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,190 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,191 - ERROR - [PERSONA] ペルソナDB保存エラー (陽菜23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,192 - ERROR - [PERSONA] ペルソナDB保存エラー (湊24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:38:29,192 - INFO - [PERSONA] 100体のペルソナを保存しました
+2025-07-06 23:38:29,192 - INFO - [PERSONA] 100体のペルソナを生成しました
+2025-07-06 23:38:29,438 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:38:29,439 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:38:29,447 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:38:29,450 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:38:29,609 - INFO - [APP] キーバインド設定完了
+2025-07-06 23:38:29,611 - INFO - [INIT] 初期化状態の検証が完了しました。
+2025-07-06 23:38:29,612 - INFO - [AUTO_POST] 自動投稿システム開始
+2025-07-06 23:38:29,613 - INFO - [APP] 自動投稿システム開始完了
+2025-07-06 23:38:29,613 - INFO - [APP] アプリケーション初期化完了 - Version 3.0.0
+2025-07-06 23:38:29,613 - INFO - [APP] アプリケーション開始
+2025-07-06 23:38:29,614 - INFO - [APP] メインループ開始
+2025-07-06 23:38:29,630 - INFO - [AUTO_POST] 投稿対象選択: Thread 6 (レトロゲームについて語りましょう) - 確率: 0.80
+2025-07-06 23:38:31,187 - INFO - [PERSONA] 自動投稿成功: 愛 -> Thread 6
+2025-07-06 23:38:31,188 - INFO - [AUTO_POST] 投稿成功: Thread 6
+2025-07-06 23:38:31,623 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:38:31,623 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:38:31,629 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:38:38,741 - INFO - [APP] スレッド選択: 2 - 最近の出来事について語りましょう
+2025-07-06 23:38:39,760 - INFO - [APP] スレッド選択: 1 - 日常の話について語りましょう
+2025-07-06 23:38:41,067 - INFO - [APP] 管理モード: ON
+2025-07-06 23:38:44,095 - INFO - [APP] 投稿間隔変更: 51秒
+2025-07-06 23:38:44,102 - INFO - [APP] 投稿間隔変更: 45秒
+2025-07-06 23:38:44,110 - INFO - [APP] 投稿間隔変更: 40秒
+2025-07-06 23:38:44,118 - INFO - [APP] 投稿間隔変更: 37秒
+2025-07-06 23:38:44,127 - INFO - [APP] 投稿間隔変更: 35秒
+2025-07-06 23:38:44,136 - INFO - [APP] 投稿間隔変更: 34秒
+2025-07-06 23:38:44,146 - INFO - [APP] 投稿間隔変更: 33秒
+2025-07-06 23:38:44,156 - INFO - [APP] 投稿間隔変更: 31秒
+2025-07-06 23:38:44,165 - INFO - [APP] 投稿間隔変更: 30秒
+2025-07-06 23:38:45,072 - INFO - [AUTO_POST] 投稿対象選択: Thread 18 (プログラミングについて語りましょう) - 確率: 0.80
+2025-07-06 23:38:46,564 - INFO - [ADMIN] AI活動: 有効
+2025-07-06 23:38:46,585 - INFO - [PERSONA] 自動投稿成功: 美羽 -> Thread 18
+2025-07-06 23:38:46,585 - INFO - [AUTO_POST] 投稿成功: Thread 18
+2025-07-06 23:38:46,849 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:38:46,850 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:38:46,855 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:38:51,269 - INFO - [APP] ウィンドウサイズ変更: 800x600
+2025-07-06 23:38:53,637 - INFO - [ADMIN] 設定保存完了
+2025-07-06 23:39:08,611 - INFO - [AUTO_POST] 投稿対象選択: Thread 11 (読書について語りましょう) - 確率: 0.80
+2025-07-06 23:39:10,210 - INFO - [PERSONA] 自動投稿成功: 徹 -> Thread 11
+2025-07-06 23:39:10,211 - INFO - [AUTO_POST] 投稿成功: Thread 11
+2025-07-06 23:39:11,078 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:39:11,078 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:39:11,085 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:39:15,687 - INFO - [APP] スレッド選択: 1 - 日常の話について語りましょう
+2025-07-06 23:39:16,590 - INFO - [APP] スレッド選択: 2 - 最近の出来事について語りましょう
+2025-07-06 23:39:17,494 - INFO - [APP] スレッド選択: 3 - 天気の話について語りましょう
+2025-07-06 23:39:18,347 - INFO - [APP] スレッド選択: 4 - グルメ情報について語りましょう
+2025-07-06 23:39:19,123 - INFO - [APP] スレッド選択: 5 - 地域情報について語りましょう
+2025-07-06 23:39:20,241 - INFO - [APP] カテゴリ選択: ゲーム
+2025-07-06 23:39:20,242 - INFO - [APP] カテゴリID設定: 2
+2025-07-06 23:39:20,242 - INFO - [APP] スレッド取得開始 - カテゴリID: 2
+2025-07-06 23:39:20,243 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:39:20,283 - INFO - [APP] 投稿表示更新完了: Thread 6, 1件
+2025-07-06 23:39:20,283 - INFO - [APP] 初期スレッド選択: 6
+2025-07-06 23:39:20,290 - INFO - [APP] 投稿表示更新完了: Thread 6, 1件
+2025-07-06 23:39:20,290 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:39:20,291 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:39:22,656 - INFO - [AUTO_POST] 投稿サイクル完了: 3/3件投稿
+2025-07-06 23:39:37,739 - INFO - [THREAD] 投稿追加: あなた -> Thread 6 (Post 4)
+2025-07-06 23:39:37,745 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:39:37,745 - INFO - [APP] スレッド取得開始 - カテゴリID: 2
+2025-07-06 23:39:37,746 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:39:37,752 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:39:37,752 - INFO - [APP] 初期スレッド選択: 6
+2025-07-06 23:39:37,757 - INFO - [APP] ユーザー投稿完了: Thread 6
+2025-07-06 23:39:42,515 - INFO - [APP] スレッド選択: 8 - アクションゲームについて語りましょう
+2025-07-06 23:39:43,851 - INFO - [APP] スレッド選択: 7 - RPGについて語りましょう
+2025-07-06 23:39:44,762 - INFO - [APP] スレッド選択: 9 - パズルゲームについて語りましょう
+2025-07-06 23:39:45,527 - INFO - [APP] スレッド選択: 10 - 新作ゲームについて語りましょう
+2025-07-06 23:39:47,137 - INFO - [APP] カテゴリ選択: 趣味
+2025-07-06 23:39:47,137 - INFO - [APP] カテゴリID設定: 3
+2025-07-06 23:39:47,138 - INFO - [APP] スレッド取得開始 - カテゴリID: 3
+2025-07-06 23:39:47,138 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:39:47,148 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:39:47,148 - INFO - [APP] 初期スレッド選択: 11
+2025-07-06 23:39:47,155 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:39:47,155 - INFO - [APP] スレッド選択: 11 - 読書について語りましょう
+2025-07-06 23:39:47,155 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:39:51,866 - INFO - [APP] スレッド選択: 12 - 映画鑑賞について語りましょう
+2025-07-06 23:39:52,691 - INFO - [APP] スレッド選択: 13 - 音楽について語りましょう
+2025-07-06 23:39:53,435 - INFO - [APP] スレッド選択: 15 - 旅行について語りましょう
+2025-07-06 23:39:54,369 - INFO - [APP] スレッド選択: 14 - スポーツについて語りましょう
+2025-07-06 23:39:55,429 - INFO - [APP] カテゴリ選択: パソコン
+2025-07-06 23:39:55,430 - INFO - [APP] カテゴリID設定: 4
+2025-07-06 23:39:55,431 - INFO - [APP] スレッド取得開始 - カテゴリID: 4
+2025-07-06 23:39:55,431 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:39:55,443 - INFO - [APP] 投稿表示更新完了: Thread 18, 1件
+2025-07-06 23:39:55,444 - INFO - [APP] 初期スレッド選択: 18
+2025-07-06 23:39:55,449 - INFO - [APP] 投稿表示更新完了: Thread 18, 1件
+2025-07-06 23:39:55,450 - INFO - [APP] スレッド選択: 18 - プログラミングについて語りましょう
+2025-07-06 23:39:55,450 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:01,296 - INFO - [APP] スレッド選択: 17 - ソフトウェアについて語りましょう
+2025-07-06 23:40:02,168 - INFO - [APP] スレッド選択: 16 - ハードウェアについて語りましょう
+2025-07-06 23:40:02,953 - INFO - [APP] スレッド選択: 20 - トラブル相談について語りましょう
+2025-07-06 23:40:03,707 - INFO - [APP] スレッド選択: 19 - インターネットについて語りましょう
+2025-07-06 23:40:05,053 - INFO - [APP] カテゴリ選択: 仕事
+2025-07-06 23:40:05,053 - INFO - [APP] カテゴリID設定: 5
+2025-07-06 23:40:05,054 - INFO - [APP] スレッド取得開始 - カテゴリID: 5
+2025-07-06 23:40:05,054 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:05,063 - INFO - [APP] 初期スレッド選択: 21
+2025-07-06 23:40:05,069 - INFO - [APP] スレッド選択: 21 - 転職相談について語りましょう
+2025-07-06 23:40:05,069 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:06,092 - INFO - [APP] カテゴリ選択: 雑談
+2025-07-06 23:40:06,093 - INFO - [APP] カテゴリID設定: 1
+2025-07-06 23:40:06,093 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:40:06,093 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:06,104 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:40:06,109 - INFO - [APP] スレッド選択: 1 - 日常の話について語りましょう
+2025-07-06 23:40:06,110 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:07,122 - INFO - [APP] カテゴリ選択: ゲーム
+2025-07-06 23:40:07,123 - INFO - [APP] カテゴリID設定: 2
+2025-07-06 23:40:07,124 - INFO - [APP] スレッド取得開始 - カテゴリID: 2
+2025-07-06 23:40:07,124 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:07,135 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:07,135 - INFO - [APP] 初期スレッド選択: 6
+2025-07-06 23:40:07,142 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:07,142 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:40:07,143 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:08,408 - INFO - [APP] カテゴリ選択: ゲーム
+2025-07-06 23:40:08,409 - INFO - [APP] カテゴリID設定: 2
+2025-07-06 23:40:08,409 - INFO - [APP] スレッド取得開始 - カテゴリID: 2
+2025-07-06 23:40:08,410 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:08,417 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:08,418 - INFO - [APP] 初期スレッド選択: 6
+2025-07-06 23:40:08,424 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:08,425 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:40:08,425 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:13,990 - INFO - [APP] スレッド選択: 8 - アクションゲームについて語りましょう
+2025-07-06 23:40:15,088 - INFO - [APP] スレッド選択: 7 - RPGについて語りましょう
+2025-07-06 23:40:15,933 - INFO - [APP] スレッド選択: 9 - パズルゲームについて語りましょう
+2025-07-06 23:40:16,668 - INFO - [APP] スレッド選択: 10 - 新作ゲームについて語りましょう
+2025-07-06 23:40:18,090 - INFO - [APP] カテゴリ選択: パソコン
+2025-07-06 23:40:18,091 - INFO - [APP] カテゴリID設定: 4
+2025-07-06 23:40:18,091 - INFO - [APP] スレッド取得開始 - カテゴリID: 4
+2025-07-06 23:40:18,092 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:18,101 - INFO - [APP] 投稿表示更新完了: Thread 18, 1件
+2025-07-06 23:40:18,101 - INFO - [APP] 初期スレッド選択: 18
+2025-07-06 23:40:18,107 - INFO - [APP] 投稿表示更新完了: Thread 18, 1件
+2025-07-06 23:40:18,107 - INFO - [APP] スレッド選択: 18 - プログラミングについて語りましょう
+2025-07-06 23:40:18,108 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:20,131 - INFO - [APP] カテゴリ選択: 仕事
+2025-07-06 23:40:20,131 - INFO - [APP] カテゴリID設定: 5
+2025-07-06 23:40:20,132 - INFO - [APP] スレッド取得開始 - カテゴリID: 5
+2025-07-06 23:40:20,133 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:20,142 - INFO - [APP] 初期スレッド選択: 21
+2025-07-06 23:40:20,148 - INFO - [APP] スレッド選択: 21 - 転職相談について語りましょう
+2025-07-06 23:40:20,148 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:21,820 - INFO - [APP] カテゴリ選択: ゲーム
+2025-07-06 23:40:21,821 - INFO - [APP] カテゴリID設定: 2
+2025-07-06 23:40:21,821 - INFO - [APP] スレッド取得開始 - カテゴリID: 2
+2025-07-06 23:40:21,822 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:21,831 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:21,831 - INFO - [APP] 初期スレッド選択: 6
+2025-07-06 23:40:21,838 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:21,838 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:40:21,838 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:24,505 - INFO - [APP] カテゴリ選択: 雑談
+2025-07-06 23:40:24,506 - INFO - [APP] カテゴリID設定: 1
+2025-07-06 23:40:24,506 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:40:24,507 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:24,519 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:40:24,524 - INFO - [APP] スレッド選択: 1 - 日常の話について語りましょう
+2025-07-06 23:40:24,524 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:25,713 - INFO - [APP] カテゴリ選択: ゲーム
+2025-07-06 23:40:25,713 - INFO - [APP] カテゴリID設定: 2
+2025-07-06 23:40:25,714 - INFO - [APP] スレッド取得開始 - カテゴリID: 2
+2025-07-06 23:40:25,714 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:25,724 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:25,724 - INFO - [APP] 初期スレッド選択: 6
+2025-07-06 23:40:25,730 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:25,731 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:40:25,731 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:38,232 - INFO - [APP] スレッド選択: 8 - アクションゲームについて語りましょう
+2025-07-06 23:40:39,370 - INFO - [APP] スレッド選択: 9 - パズルゲームについて語りましょう
+2025-07-06 23:40:40,253 - INFO - [APP] スレッド選択: 10 - 新作ゲームについて語りましょう
+2025-07-06 23:40:42,197 - INFO - [APP] カテゴリ選択: 仕事
+2025-07-06 23:40:42,197 - INFO - [APP] カテゴリID設定: 5
+2025-07-06 23:40:42,198 - INFO - [APP] スレッド取得開始 - カテゴリID: 5
+2025-07-06 23:40:42,199 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:42,208 - INFO - [APP] 初期スレッド選択: 21
+2025-07-06 23:40:42,214 - INFO - [APP] スレッド選択: 21 - 転職相談について語りましょう
+2025-07-06 23:40:42,214 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:43,461 - INFO - [APP] カテゴリ選択: パソコン
+2025-07-06 23:40:43,462 - INFO - [APP] カテゴリID設定: 4
+2025-07-06 23:40:43,462 - INFO - [APP] スレッド取得開始 - カテゴリID: 4
+2025-07-06 23:40:43,463 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:43,473 - INFO - [APP] 投稿表示更新完了: Thread 18, 1件
+2025-07-06 23:40:43,473 - INFO - [APP] 初期スレッド選択: 18
+2025-07-06 23:40:43,480 - INFO - [APP] 投稿表示更新完了: Thread 18, 1件
+2025-07-06 23:40:43,480 - INFO - [APP] スレッド選択: 18 - プログラミングについて語りましょう
+2025-07-06 23:40:43,480 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:44,944 - INFO - [APP] カテゴリ選択: 雑談
+2025-07-06 23:40:44,944 - INFO - [APP] カテゴリID設定: 1
+2025-07-06 23:40:44,945 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:40:44,945 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:44,954 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:40:44,959 - INFO - [APP] スレッド選択: 1 - 日常の話について語りましょう
+2025-07-06 23:40:44,960 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:46,092 - INFO - [APP] カテゴリ選択: ゲーム
+2025-07-06 23:40:46,092 - INFO - [APP] カテゴリID設定: 2
+2025-07-06 23:40:46,092 - INFO - [APP] スレッド取得開始 - カテゴリID: 2
+2025-07-06 23:40:46,093 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:46,101 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:46,102 - INFO - [APP] 初期スレッド選択: 6
+2025-07-06 23:40:46,108 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:40:46,108 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:40:46,108 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:47,631 - INFO - [APP] カテゴリ選択: 趣味
+2025-07-06 23:40:47,632 - INFO - [APP] カテゴリID設定: 3
+2025-07-06 23:40:47,632 - INFO - [APP] スレッド取得開始 - カテゴリID: 3
+2025-07-06 23:40:47,633 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:47,643 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:40:47,643 - INFO - [APP] 初期スレッド選択: 11
+2025-07-06 23:40:47,649 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:40:47,649 - INFO - [APP] スレッド選択: 11 - 読書について語りましょう
+2025-07-06 23:40:47,649 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:50,054 - INFO - [APP] スレッド選択: 13 - 音楽について語りましょう
+2025-07-06 23:40:51,152 - INFO - [APP] スレッド選択: 12 - 映画鑑賞について語りましょう
+2025-07-06 23:40:52,034 - INFO - [APP] スレッド選択: 14 - スポーツについて語りましょう
+2025-07-06 23:40:52,741 - INFO - [APP] スレッド選択: 15 - 旅行について語りましょう
+2025-07-06 23:40:53,910 - INFO - [APP] カテゴリ選択: 仕事
+2025-07-06 23:40:53,910 - INFO - [APP] カテゴリID設定: 5
+2025-07-06 23:40:53,911 - INFO - [APP] スレッド取得開始 - カテゴリID: 5
+2025-07-06 23:40:53,911 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:53,921 - INFO - [APP] 初期スレッド選択: 21
+2025-07-06 23:40:53,926 - INFO - [APP] スレッド選択: 21 - 転職相談について語りましょう
+2025-07-06 23:40:53,926 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:40:54,187 - INFO - [AUTO_POST] 投稿対象選択: Thread 8 (アクションゲームについて語りましょう) - 確率: 0.80
+2025-07-06 23:40:55,673 - INFO - [APP] スレッド選択: 25 - 資格取得について語りましょう
+2025-07-06 23:40:55,836 - INFO - [PERSONA] 自動投稿成功: 柚希19 -> Thread 8
+2025-07-06 23:40:55,836 - INFO - [AUTO_POST] 投稿成功: Thread 8
+2025-07-06 23:40:56,355 - INFO - [APP] スレッド取得開始 - カテゴリID: 5
+2025-07-06 23:40:56,356 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:40:56,361 - INFO - [APP] 初期スレッド選択: 21
+2025-07-06 23:40:56,526 - INFO - [APP] スレッド選択: 24 - 副業について語りましょう
+2025-07-06 23:40:57,746 - INFO - [APP] スレッド選択: 23 - 職場の悩みについて語りましょう
+2025-07-06 23:40:58,685 - INFO - [APP] スレッド選択: 22 - スキルアップについて語りましょう
+2025-07-06 23:40:59,681 - INFO - [APP] スレッド選択: 21 - 転職相談について語りましょう
+2025-07-06 23:41:01,118 - INFO - [APP] カテゴリ選択: パソコン
+2025-07-06 23:41:01,119 - INFO - [APP] カテゴリID設定: 4
+2025-07-06 23:41:01,119 - INFO - [APP] スレッド取得開始 - カテゴリID: 4
+2025-07-06 23:41:01,120 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:41:01,129 - INFO - [APP] 投稿表示更新完了: Thread 18, 1件
+2025-07-06 23:41:01,129 - INFO - [APP] 初期スレッド選択: 18
+2025-07-06 23:41:01,136 - INFO - [APP] 投稿表示更新完了: Thread 18, 1件
+2025-07-06 23:41:01,136 - INFO - [APP] スレッド選択: 18 - プログラミングについて語りましょう
+2025-07-06 23:41:01,136 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:41:03,050 - INFO - [APP] スレッド選択: 16 - ハードウェアについて語りましょう
+2025-07-06 23:41:03,991 - INFO - [APP] スレッド選択: 19 - インターネットについて語りましょう
+2025-07-06 23:41:04,894 - INFO - [APP] スレッド選択: 17 - ソフトウェアについて語りましょう
+2025-07-06 23:41:05,698 - INFO - [APP] スレッド選択: 20 - トラブル相談について語りましょう
+2025-07-06 23:41:07,191 - INFO - [APP] カテゴリ選択: 趣味
+2025-07-06 23:41:07,192 - INFO - [APP] カテゴリID設定: 3
+2025-07-06 23:41:07,192 - INFO - [APP] スレッド取得開始 - カテゴリID: 3
+2025-07-06 23:41:07,193 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:41:07,203 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:41:07,204 - INFO - [APP] 初期スレッド選択: 11
+2025-07-06 23:41:07,209 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:41:07,210 - INFO - [APP] スレッド選択: 11 - 読書について語りましょう
+2025-07-06 23:41:07,210 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:41:08,800 - INFO - [APP] スレッド選択: 12 - 映画鑑賞について語りましょう
+2025-07-06 23:41:09,583 - INFO - [APP] スレッド選択: 13 - 音楽について語りましょう
+2025-07-06 23:41:10,240 - INFO - [APP] スレッド選択: 14 - スポーツについて語りましょう
+2025-07-06 23:41:10,986 - INFO - [APP] スレッド選択: 15 - 旅行について語りましょう
+2025-07-06 23:41:12,167 - INFO - [AUTO_POST] 投稿対象選択: Thread 17 (ソフトウェアについて語りましょう) - 確率: 0.80
+2025-07-06 23:41:12,379 - INFO - [APP] 管理モード: OFF
+2025-07-06 23:41:13,986 - INFO - [PERSONA] 自動投稿成功: 和夫 -> Thread 17
+2025-07-06 23:41:13,986 - INFO - [AUTO_POST] 投稿成功: Thread 17
+2025-07-06 23:41:14,584 - INFO - [APP] スレッド取得開始 - カテゴリID: 3
+2025-07-06 23:41:14,584 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:41:14,591 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:41:14,591 - INFO - [APP] 初期スレッド選択: 11
+2025-07-06 23:41:28,301 - INFO - [AUTO_POST] 投稿サイクル完了: 2/2件投稿
+2025-07-06 23:41:42,733 - INFO - [APP] カテゴリ選択: 雑談
+2025-07-06 23:41:42,733 - INFO - [APP] カテゴリID設定: 1
+2025-07-06 23:41:42,734 - INFO - [APP] スレッド取得開始 - カテゴリID: 1
+2025-07-06 23:41:42,735 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:41:42,746 - INFO - [APP] 初期スレッド選択: 1
+2025-07-06 23:41:42,752 - INFO - [APP] スレッド選択: 1 - 日常の話について語りましょう
+2025-07-06 23:41:42,752 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:41:44,671 - INFO - [APP] スレッド選択: 2 - 最近の出来事について語りましょう
+2025-07-06 23:41:45,577 - INFO - [APP] スレッド選択: 3 - 天気の話について語りましょう
+2025-07-06 23:41:46,361 - INFO - [APP] スレッド選択: 4 - グルメ情報について語りましょう
+2025-07-06 23:41:46,646 - INFO - [APP] スレッド選択: 5 - 地域情報について語りましょう
+2025-07-06 23:41:46,977 - INFO - [APP] スレッド選択: 5 - 地域情報について語りましょう
+2025-07-06 23:41:48,411 - INFO - [APP] カテゴリ選択: 趣味
+2025-07-06 23:41:48,412 - INFO - [APP] カテゴリID設定: 3
+2025-07-06 23:41:48,412 - INFO - [APP] スレッド取得開始 - カテゴリID: 3
+2025-07-06 23:41:48,412 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:41:48,422 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:41:48,423 - INFO - [APP] 初期スレッド選択: 11
+2025-07-06 23:41:48,429 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:41:48,429 - INFO - [APP] スレッド選択: 11 - 読書について語りましょう
+2025-07-06 23:41:48,429 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:41:49,362 - INFO - [APP] カテゴリ選択: ゲーム
+2025-07-06 23:41:49,363 - INFO - [APP] カテゴリID設定: 2
+2025-07-06 23:41:49,363 - INFO - [APP] スレッド取得開始 - カテゴリID: 2
+2025-07-06 23:41:49,364 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:41:49,374 - INFO - [APP] 投稿表示更新完了: Thread 8, 1件
+2025-07-06 23:41:49,374 - INFO - [APP] 初期スレッド選択: 8
+2025-07-06 23:41:49,381 - INFO - [APP] 投稿表示更新完了: Thread 8, 1件
+2025-07-06 23:41:49,381 - INFO - [APP] スレッド選択: 8 - アクションゲームについて語りましょう
+2025-07-06 23:41:49,381 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:41:51,962 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:41:51,962 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:41:53,216 - INFO - [APP] 投稿表示更新完了: Thread 8, 1件
+2025-07-06 23:41:53,217 - INFO - [APP] スレッド選択: 8 - アクションゲームについて語りましょう
+2025-07-06 23:41:57,560 - INFO - [APP] スレッド選択: 7 - RPGについて語りましょう
+2025-07-06 23:41:58,579 - INFO - [APP] スレッド選択: 9 - パズルゲームについて語りましょう
+2025-07-06 23:41:59,472 - INFO - [APP] スレッド選択: 10 - 新作ゲームについて語りましょう
+2025-07-06 23:42:00,364 - INFO - [APP] 投稿表示更新完了: Thread 8, 1件
+2025-07-06 23:42:00,364 - INFO - [APP] スレッド選択: 8 - アクションゲームについて語りましょう
+2025-07-06 23:42:01,286 - INFO - [APP] 投稿表示更新完了: Thread 6, 2件
+2025-07-06 23:42:01,286 - INFO - [APP] スレッド選択: 6 - レトロゲームについて語りましょう
+2025-07-06 23:42:03,208 - INFO - [APP] カテゴリ選択: 趣味
+2025-07-06 23:42:03,208 - INFO - [APP] カテゴリID設定: 3
+2025-07-06 23:42:03,209 - INFO - [APP] スレッド取得開始 - カテゴリID: 3
+2025-07-06 23:42:03,209 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:42:03,219 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:42:03,220 - INFO - [APP] 初期スレッド選択: 11
+2025-07-06 23:42:03,225 - INFO - [APP] 投稿表示更新完了: Thread 11, 1件
+2025-07-06 23:42:03,225 - INFO - [APP] スレッド選択: 11 - 読書について語りましょう
+2025-07-06 23:42:03,226 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:42:05,551 - INFO - [APP] スレッド選択: 12 - 映画鑑賞について語りましょう
+2025-07-06 23:42:06,354 - INFO - [APP] スレッド選択: 14 - スポーツについて語りましょう
+2025-07-06 23:42:07,139 - INFO - [APP] スレッド選択: 15 - 旅行について語りましょう
+2025-07-06 23:42:08,758 - INFO - [APP] カテゴリ選択: パソコン
+2025-07-06 23:42:08,758 - INFO - [APP] カテゴリID設定: 4
+2025-07-06 23:42:08,758 - INFO - [APP] スレッド取得開始 - カテゴリID: 4
+2025-07-06 23:42:08,759 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:42:08,770 - INFO - [APP] 投稿表示更新完了: Thread 17, 1件
+2025-07-06 23:42:08,770 - INFO - [APP] 初期スレッド選択: 17
+2025-07-06 23:42:08,776 - INFO - [APP] 投稿表示更新完了: Thread 17, 1件
+2025-07-06 23:42:08,777 - INFO - [APP] スレッド選択: 17 - ソフトウェアについて語りましょう
+2025-07-06 23:42:08,777 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:42:12,189 - INFO - [APP] 投稿表示更新完了: Thread 18, 1件
+2025-07-06 23:42:12,189 - INFO - [APP] スレッド選択: 18 - プログラミングについて語りましょう
+2025-07-06 23:42:13,326 - INFO - [APP] 投稿表示更新完了: Thread 17, 1件
+2025-07-06 23:42:13,327 - INFO - [APP] スレッド選択: 17 - ソフトウェアについて語りましょう
+2025-07-06 23:42:14,687 - INFO - [APP] スレッド選択: 19 - インターネットについて語りましょう
+2025-07-06 23:42:15,481 - INFO - [APP] スレッド選択: 20 - トラブル相談について語りましょう
+2025-07-06 23:42:16,737 - INFO - [APP] カテゴリ選択: 仕事
+2025-07-06 23:42:16,738 - INFO - [APP] カテゴリID設定: 5
+2025-07-06 23:42:16,739 - INFO - [APP] スレッド取得開始 - カテゴリID: 5
+2025-07-06 23:42:16,739 - INFO - [APP] 取得されたスレッド数: 5
+2025-07-06 23:42:16,748 - INFO - [APP] 初期スレッド選択: 21
+2025-07-06 23:42:16,754 - INFO - [APP] スレッド選択: 21 - 転職相談について語りましょう
+2025-07-06 23:42:16,755 - WARNING - [APP] カテゴリが選択されていません
+2025-07-06 23:42:19,733 - INFO - [APP] アプリケーション終了処理開始
+2025-07-06 23:42:19,734 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,735 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,737 - ERROR - [PERSONA] ペルソナDB保存エラー (英雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,737 - ERROR - [PERSONA] ペルソナDB保存エラー (道子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,738 - ERROR - [PERSONA] ペルソナDB保存エラー (修): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,739 - ERROR - [PERSONA] ペルソナDB保存エラー (光子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,740 - ERROR - [PERSONA] ペルソナDB保存エラー (忠雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,741 - ERROR - [PERSONA] ペルソナDB保存エラー (幸子7): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,741 - ERROR - [PERSONA] ペルソナDB保存エラー (和夫): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,742 - ERROR - [PERSONA] ペルソナDB保存エラー (春子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,743 - ERROR - [PERSONA] ペルソナDB保存エラー (正雄): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,744 - ERROR - [PERSONA] ペルソナDB保存エラー (光子11): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,745 - ERROR - [PERSONA] ペルソナDB保存エラー (和夫12): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,746 - ERROR - [PERSONA] ペルソナDB保存エラー (智子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,746 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄14): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,747 - ERROR - [PERSONA] ペルソナDB保存エラー (君子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,748 - ERROR - [PERSONA] ペルソナDB保存エラー (博): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,749 - ERROR - [PERSONA] ペルソナDB保存エラー (信子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,750 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄18): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,750 - ERROR - [PERSONA] ペルソナDB保存エラー (美代子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,751 - ERROR - [PERSONA] ペルソナDB保存エラー (誠): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,752 - ERROR - [PERSONA] ペルソナDB保存エラー (春子21): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,753 - ERROR - [PERSONA] ペルソナDB保存エラー (明): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,754 - ERROR - [PERSONA] ペルソナDB保存エラー (道子23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,754 - ERROR - [PERSONA] ペルソナDB保存エラー (清): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,756 - ERROR - [PERSONA] ペルソナDB保存エラー (徹): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,757 - ERROR - [PERSONA] ペルソナDB保存エラー (裕子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,758 - ERROR - [PERSONA] ペルソナDB保存エラー (宏): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,758 - ERROR - [PERSONA] ペルソナDB保存エラー (真理): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,759 - ERROR - [PERSONA] ペルソナDB保存エラー (晃): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,760 - ERROR - [PERSONA] ペルソナDB保存エラー (順子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,761 - ERROR - [PERSONA] ペルソナDB保存エラー (徹6): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,762 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,762 - ERROR - [PERSONA] ペルソナDB保存エラー (善行): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,763 - ERROR - [PERSONA] ペルソナDB保存エラー (里美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,764 - ERROR - [PERSONA] ペルソナDB保存エラー (直樹): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,765 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,766 - ERROR - [PERSONA] ペルソナDB保存エラー (哲也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,766 - ERROR - [PERSONA] ペルソナDB保存エラー (康子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,767 - ERROR - [PERSONA] ペルソナDB保存エラー (淳): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,768 - ERROR - [PERSONA] ペルソナDB保存エラー (純子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,769 - ERROR - [PERSONA] ペルソナDB保存エラー (誠二): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,770 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美17): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,770 - ERROR - [PERSONA] ペルソナDB保存エラー (学): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,771 - ERROR - [PERSONA] ペルソナDB保存エラー (敦子): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,772 - ERROR - [PERSONA] ペルソナDB保存エラー (徹20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,773 - ERROR - [PERSONA] ペルソナDB保存エラー (由美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,773 - ERROR - [PERSONA] ペルソナDB保存エラー (善行22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,774 - ERROR - [PERSONA] ペルソナDB保存エラー (恵美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,775 - ERROR - [PERSONA] ペルソナDB保存エラー (徹24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,776 - ERROR - [PERSONA] ペルソナDB保存エラー (颯太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,777 - ERROR - [PERSONA] ペルソナDB保存エラー (亜美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,777 - ERROR - [PERSONA] ペルソナDB保存エラー (駿): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,778 - ERROR - [PERSONA] ペルソナDB保存エラー (千春): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,779 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,780 - ERROR - [PERSONA] ペルソナDB保存エラー (絵美): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,781 - ERROR - [PERSONA] ペルソナDB保存エラー (雅人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,781 - ERROR - [PERSONA] ペルソナDB保存エラー (理恵): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,782 - ERROR - [PERSONA] ペルソナDB保存エラー (拓海): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,783 - ERROR - [PERSONA] ペルソナDB保存エラー (瞳): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,784 - ERROR - [PERSONA] ペルソナDB保存エラー (陸): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,785 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂11): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,785 - ERROR - [PERSONA] ペルソナDB保存エラー (優斗): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,786 - ERROR - [PERSONA] ペルソナDB保存エラー (理恵13): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,787 - ERROR - [PERSONA] ペルソナDB保存エラー (雅人14): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,788 - ERROR - [PERSONA] ペルソナDB保存エラー (沙織): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,789 - ERROR - [PERSONA] ペルソナDB保存エラー (直人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,789 - ERROR - [PERSONA] ペルソナDB保存エラー (彩): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,790 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,791 - ERROR - [PERSONA] ペルソナDB保存エラー (愛): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,792 - ERROR - [PERSONA] ペルソナDB保存エラー (佑介): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,793 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,793 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,794 - ERROR - [PERSONA] ペルソナDB保存エラー (加奈): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,795 - ERROR - [PERSONA] ペルソナDB保存エラー (昌也): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,796 - ERROR - [PERSONA] ペルソナDB保存エラー (航): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,797 - ERROR - [PERSONA] ペルソナDB保存エラー (千尋): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,797 - ERROR - [PERSONA] ペルソナDB保存エラー (湊): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,798 - ERROR - [PERSONA] ペルソナDB保存エラー (美羽): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,799 - ERROR - [PERSONA] ペルソナDB保存エラー (健太郎): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,800 - ERROR - [PERSONA] ペルソナDB保存エラー (陽菜): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,801 - ERROR - [PERSONA] ペルソナDB保存エラー (翔太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,801 - ERROR - [PERSONA] ペルソナDB保存エラー (柚希): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,802 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人8): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,803 - ERROR - [PERSONA] ペルソナDB保存エラー (凛): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,804 - ERROR - [PERSONA] ペルソナDB保存エラー (優斗10): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,805 - ERROR - [PERSONA] ペルソナDB保存エラー (美羽11): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,805 - ERROR - [PERSONA] ペルソナDB保存エラー (朝陽): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,806 - ERROR - [PERSONA] ペルソナDB保存エラー (優奈): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,807 - ERROR - [PERSONA] ペルソナDB保存エラー (優斗14): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,808 - ERROR - [PERSONA] ペルソナDB保存エラー (愛莉): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,809 - ERROR - [PERSONA] ペルソナDB保存エラー (心): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,810 - ERROR - [PERSONA] ペルソナDB保存エラー (柚希17): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,811 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,812 - ERROR - [PERSONA] ペルソナDB保存エラー (柚希19): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,813 - ERROR - [PERSONA] ペルソナDB保存エラー (朝陽20): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,813 - ERROR - [PERSONA] ペルソナDB保存エラー (美咲): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,814 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮22): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,815 - ERROR - [PERSONA] ペルソナDB保存エラー (陽菜23): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,816 - ERROR - [PERSONA] ペルソナDB保存エラー (湊24): Object of type PersonalityType is not JSON serializable
+2025-07-06 23:42:19,816 - INFO - [PERSONA] 100体のペルソナを保存しました
+2025-07-06 23:42:19,816 - INFO - [APP] ペルソナデータ保存完了
+2025-07-06 23:42:19,816 - INFO - [APP] アプリケーション終了処理完了
+2025-07-06 23:42:19,838 - INFO - [APP] アプリケーション終了
+2025-07-07 00:15:28,870 - INFO - [DB] バージョン履歴を初期化しました
+2025-07-07 00:15:28,870 - INFO - [DB] データベース初期化完了: bbs_database.db
+2025-07-07 00:15:30,394 - INFO - [GEMINI] CLI利用可能: True
+2025-07-07 00:15:31,199 - INFO - [G4F] 利用可能: Chatai + gpt-3.5-turbo
+2025-07-07 00:15:32,691 - INFO - [G4F] 利用可能: Chatai + gpt-4
+2025-07-07 00:15:32,692 - WARNING - [G4F] テスト失敗: You + gpt-3.5-turbo - Model not found: gpt-3.5-turbo in: You Valid models: ['gpt-4o-mini', 'gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'grok-2', 'claude-3.5-sonnet', 'claude-3.5-haiku', 'claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku', 'llama-3.3-70b', 'llama-3.1-70b', 'llama-3', 'gemini-1-5-flash', 'gemini-1-5-pro', 'databricks-dbrx-instruct', 'command-r', 'command-r-plus', 'dolphin-2.5', 'agent', 'dall-e']
+2025-07-07 00:15:32,692 - INFO - [G4F] 使用組み合わせ: Chatai + gpt-3.5-turbo
+2025-07-07 00:15:32,694 - INFO - [AI] 初期化完了 - G4F: True, Gemini: True
+2025-07-07 00:15:32,696 - INFO - [CATEGORY] カテゴリ管理初期化完了
+2025-07-07 00:15:32,707 - INFO - [THREAD] スレッド管理初期化完了
+2025-07-07 00:15:32,707 - INFO - [PERSONA] ペルソナ生成開始
+2025-07-07 00:15:32,707 - INFO - [PERSONA] 1950s-60s世代のペルソナ生成中...
+2025-07-07 00:15:32,710 - INFO - [PERSONA] 1970s-80s世代のペルソナ生成中...
+2025-07-07 00:15:32,713 - INFO - [PERSONA] 1990s-2000s世代のペルソナ生成中...
+2025-07-07 00:15:32,717 - INFO - [PERSONA] 2010s-20s世代のペルソナ生成中...
+2025-07-07 00:15:32,722 - INFO - [PERSONA] 総ペルソナ数: 100体
+2025-07-07 00:15:32,723 - ERROR - [PERSONA] ペルソナDB保存エラー (昭夫): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,725 - ERROR - [PERSONA] ペルソナDB保存エラー (節子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,726 - ERROR - [PERSONA] ペルソナDB保存エラー (昭夫2): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,728 - ERROR - [PERSONA] ペルソナDB保存エラー (光子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,729 - ERROR - [PERSONA] ペルソナDB保存エラー (昭夫4): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,731 - ERROR - [PERSONA] ペルソナDB保存エラー (春子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,732 - ERROR - [PERSONA] ペルソナDB保存エラー (誠): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,734 - ERROR - [PERSONA] ペルソナDB保存エラー (道子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,735 - ERROR - [PERSONA] ペルソナDB保存エラー (博): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,737 - ERROR - [PERSONA] ペルソナDB保存エラー (雪子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,739 - ERROR - [PERSONA] ペルソナDB保存エラー (次郎): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,740 - ERROR - [PERSONA] ペルソナDB保存エラー (久子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,742 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,743 - ERROR - [PERSONA] ペルソナDB保存エラー (洋子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,745 - ERROR - [PERSONA] ペルソナDB保存エラー (明): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,746 - ERROR - [PERSONA] ペルソナDB保存エラー (久子15): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,748 - ERROR - [PERSONA] ペルソナDB保存エラー (和夫): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,749 - ERROR - [PERSONA] ペルソナDB保存エラー (和子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,750 - ERROR - [PERSONA] ペルソナDB保存エラー (清): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,752 - ERROR - [PERSONA] ペルソナDB保存エラー (久子19): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,753 - ERROR - [PERSONA] ペルソナDB保存エラー (正雄): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,755 - ERROR - [PERSONA] ペルソナDB保存エラー (光子21): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,756 - ERROR - [PERSONA] ペルソナDB保存エラー (稔): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,757 - ERROR - [PERSONA] ペルソナDB保存エラー (君子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,759 - ERROR - [PERSONA] ペルソナDB保存エラー (勝): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,760 - ERROR - [PERSONA] ペルソナDB保存エラー (直樹): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,762 - ERROR - [PERSONA] ペルソナDB保存エラー (美奈子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,763 - ERROR - [PERSONA] ペルソナDB保存エラー (直樹2): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,764 - ERROR - [PERSONA] ペルソナDB保存エラー (法子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,766 - ERROR - [PERSONA] ペルソナDB保存エラー (聡): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,767 - ERROR - [PERSONA] ペルソナDB保存エラー (陽子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,769 - ERROR - [PERSONA] ペルソナDB保存エラー (健一): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,771 - ERROR - [PERSONA] ペルソナDB保存エラー (智子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,772 - ERROR - [PERSONA] ペルソナDB保存エラー (智): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,774 - ERROR - [PERSONA] ペルソナDB保存エラー (美奈子9): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,776 - ERROR - [PERSONA] ペルソナDB保存エラー (淳): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,777 - ERROR - [PERSONA] ペルソナDB保存エラー (典子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,779 - ERROR - [PERSONA] ペルソナDB保存エラー (雅史): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,779 - ERROR - [PERSONA] ペルソナDB保存エラー (裕子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,780 - ERROR - [PERSONA] ペルソナDB保存エラー (拓也): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,781 - ERROR - [PERSONA] ペルソナDB保存エラー (康子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,782 - ERROR - [PERSONA] ペルソナDB保存エラー (正志): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,783 - ERROR - [PERSONA] ペルソナDB保存エラー (法子17): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,784 - ERROR - [PERSONA] ペルソナDB保存エラー (淳18): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,784 - ERROR - [PERSONA] ペルソナDB保存エラー (佳子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,785 - ERROR - [PERSONA] ペルソナDB保存エラー (誠二): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,787 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,788 - ERROR - [PERSONA] ペルソナDB保存エラー (聡22): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,789 - ERROR - [PERSONA] ペルソナDB保存エラー (順子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,790 - ERROR - [PERSONA] ペルソナDB保存エラー (聡24): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,791 - ERROR - [PERSONA] ペルソナDB保存エラー (陸): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,792 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,793 - ERROR - [PERSONA] ペルソナDB保存エラー (佑介): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,794 - ERROR - [PERSONA] ペルソナDB保存エラー (麻衣): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,795 - ERROR - [PERSONA] ペルソナDB保存エラー (大輔): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,796 - ERROR - [PERSONA] ペルソナDB保存エラー (由香): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,796 - ERROR - [PERSONA] ペルソナDB保存エラー (雅人): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,797 - ERROR - [PERSONA] ペルソナDB保存エラー (美咲): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,798 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,799 - ERROR - [PERSONA] ペルソナDB保存エラー (沙織): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,800 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,801 - ERROR - [PERSONA] ペルソナDB保存エラー (千春): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,801 - ERROR - [PERSONA] ペルソナDB保存エラー (直人): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,802 - ERROR - [PERSONA] ペルソナDB保存エラー (加奈): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,803 - ERROR - [PERSONA] ペルソナDB保存エラー (直人14): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,804 - ERROR - [PERSONA] ペルソナDB保存エラー (香織): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,805 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人16): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,805 - ERROR - [PERSONA] ペルソナDB保存エラー (愛): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,806 - ERROR - [PERSONA] ペルソナDB保存エラー (祐介): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,807 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,808 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大20): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,809 - ERROR - [PERSONA] ペルソナDB保存エラー (愛21): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,809 - ERROR - [PERSONA] ペルソナDB保存エラー (拓海): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,810 - ERROR - [PERSONA] ペルソナDB保存エラー (瞳): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,811 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大24): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,812 - ERROR - [PERSONA] ペルソナDB保存エラー (樹): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,813 - ERROR - [PERSONA] ペルソナDB保存エラー (結愛): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,813 - ERROR - [PERSONA] ペルソナDB保存エラー (心): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,814 - ERROR - [PERSONA] ペルソナDB保存エラー (千尋): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,815 - ERROR - [PERSONA] ペルソナDB保存エラー (悠斗): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,816 - ERROR - [PERSONA] ペルソナDB保存エラー (凛): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,817 - ERROR - [PERSONA] ペルソナDB保存エラー (大翔): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,818 - ERROR - [PERSONA] ペルソナDB保存エラー (美月): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,820 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,821 - ERROR - [PERSONA] ペルソナDB保存エラー (莉子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,822 - ERROR - [PERSONA] ペルソナDB保存エラー (奏): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,823 - ERROR - [PERSONA] ペルソナDB保存エラー (愛莉): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,824 - ERROR - [PERSONA] ペルソナDB保存エラー (湊): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,825 - ERROR - [PERSONA] ペルソナDB保存エラー (陽菜): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,826 - ERROR - [PERSONA] ペルソナDB保存エラー (優斗): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,827 - ERROR - [PERSONA] ペルソナDB保存エラー (美咲15): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,828 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,828 - ERROR - [PERSONA] ペルソナDB保存エラー (琴音): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,829 - ERROR - [PERSONA] ペルソナDB保存エラー (翔太): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,830 - ERROR - [PERSONA] ペルソナDB保存エラー (陽菜19): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,831 - ERROR - [PERSONA] ペルソナDB保存エラー (心20): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,832 - ERROR - [PERSONA] ペルソナDB保存エラー (心春): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,832 - ERROR - [PERSONA] ペルソナDB保存エラー (樹22): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,833 - ERROR - [PERSONA] ペルソナDB保存エラー (美羽): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,835 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人24): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:32,835 - INFO - [PERSONA] 100体のペルソナを保存しました
+2025-07-07 00:15:32,835 - INFO - [PERSONA] 100体のペルソナを生成しました
+2025-07-07 00:15:33,118 - WARNING - [APP] カテゴリが選択されていません
+2025-07-07 00:15:33,326 - INFO - [APP] キーバインド設定完了
+2025-07-07 00:15:33,327 - INFO - [INIT] 初期化状態の検証が完了しました。
+2025-07-07 00:15:33,328 - INFO - [SCHEDULER] 高頻度投稿システム開始
+2025-07-07 00:15:33,328 - INFO - [AUTO_POST] 従来システム開始
+2025-07-07 00:15:33,328 - INFO - [APP] 従来自動投稿システム開始完了
+2025-07-07 00:15:33,329 - INFO - [APP] 拡張自動投稿システム開始完了
+2025-07-07 00:15:33,329 - INFO - [APP] アプリケーション初期化完了 - Version 3.1.0
+2025-07-07 00:15:33,330 - INFO - [APP] アプリケーション開始
+2025-07-07 00:15:33,330 - INFO - [APP] メインループ開始
+2025-07-07 00:15:33,348 - INFO - [AUTO_POST] 投稿対象選択: Thread 10 (新作ゲームについて語りましょう) - 確率: 0.80
+2025-07-07 00:15:35,285 - INFO - [PERSONA] 自動投稿成功: 洋子 -> Thread 10
+2025-07-07 00:15:35,286 - INFO - [AUTO_POST] 投稿成功: Thread 10
+2025-07-07 00:15:37,659 - INFO - [APP] アプリケーション終了処理開始
+2025-07-07 00:15:37,661 - ERROR - [PERSONA] ペルソナDB保存エラー (昭夫): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,662 - ERROR - [PERSONA] ペルソナDB保存エラー (節子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,663 - ERROR - [PERSONA] ペルソナDB保存エラー (昭夫2): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,664 - ERROR - [PERSONA] ペルソナDB保存エラー (光子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,665 - ERROR - [PERSONA] ペルソナDB保存エラー (昭夫4): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,666 - ERROR - [PERSONA] ペルソナDB保存エラー (春子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,667 - ERROR - [PERSONA] ペルソナDB保存エラー (誠): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,668 - ERROR - [PERSONA] ペルソナDB保存エラー (道子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,669 - ERROR - [PERSONA] ペルソナDB保存エラー (博): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,670 - ERROR - [PERSONA] ペルソナDB保存エラー (雪子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,671 - ERROR - [PERSONA] ペルソナDB保存エラー (次郎): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,672 - ERROR - [PERSONA] ペルソナDB保存エラー (久子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,673 - ERROR - [PERSONA] ペルソナDB保存エラー (光雄): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,674 - ERROR - [PERSONA] ペルソナDB保存エラー (洋子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,675 - ERROR - [PERSONA] ペルソナDB保存エラー (明): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,675 - ERROR - [PERSONA] ペルソナDB保存エラー (久子15): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,676 - ERROR - [PERSONA] ペルソナDB保存エラー (和夫): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,677 - ERROR - [PERSONA] ペルソナDB保存エラー (和子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,678 - ERROR - [PERSONA] ペルソナDB保存エラー (清): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,679 - ERROR - [PERSONA] ペルソナDB保存エラー (久子19): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,680 - ERROR - [PERSONA] ペルソナDB保存エラー (正雄): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,680 - ERROR - [PERSONA] ペルソナDB保存エラー (光子21): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,681 - ERROR - [PERSONA] ペルソナDB保存エラー (稔): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,682 - ERROR - [PERSONA] ペルソナDB保存エラー (君子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,683 - ERROR - [PERSONA] ペルソナDB保存エラー (勝): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,683 - ERROR - [PERSONA] ペルソナDB保存エラー (直樹): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,684 - ERROR - [PERSONA] ペルソナDB保存エラー (美奈子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,685 - ERROR - [PERSONA] ペルソナDB保存エラー (直樹2): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,686 - ERROR - [PERSONA] ペルソナDB保存エラー (法子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,687 - ERROR - [PERSONA] ペルソナDB保存エラー (聡): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,687 - ERROR - [PERSONA] ペルソナDB保存エラー (陽子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,688 - ERROR - [PERSONA] ペルソナDB保存エラー (健一): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,689 - ERROR - [PERSONA] ペルソナDB保存エラー (智子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,690 - ERROR - [PERSONA] ペルソナDB保存エラー (智): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,691 - ERROR - [PERSONA] ペルソナDB保存エラー (美奈子9): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,691 - ERROR - [PERSONA] ペルソナDB保存エラー (淳): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,692 - ERROR - [PERSONA] ペルソナDB保存エラー (典子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,693 - ERROR - [PERSONA] ペルソナDB保存エラー (雅史): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,694 - ERROR - [PERSONA] ペルソナDB保存エラー (裕子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,694 - ERROR - [PERSONA] ペルソナDB保存エラー (拓也): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,695 - ERROR - [PERSONA] ペルソナDB保存エラー (康子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,696 - ERROR - [PERSONA] ペルソナDB保存エラー (正志): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,697 - ERROR - [PERSONA] ペルソナDB保存エラー (法子17): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,698 - ERROR - [PERSONA] ペルソナDB保存エラー (淳18): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,698 - ERROR - [PERSONA] ペルソナDB保存エラー (佳子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,699 - ERROR - [PERSONA] ペルソナDB保存エラー (誠二): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,700 - ERROR - [PERSONA] ペルソナDB保存エラー (真由美): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,701 - ERROR - [PERSONA] ペルソナDB保存エラー (聡22): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,702 - ERROR - [PERSONA] ペルソナDB保存エラー (順子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,702 - ERROR - [PERSONA] ペルソナDB保存エラー (聡24): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,703 - ERROR - [PERSONA] ペルソナDB保存エラー (陸): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,704 - ERROR - [PERSONA] ペルソナDB保存エラー (恵理): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,705 - ERROR - [PERSONA] ペルソナDB保存エラー (佑介): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,706 - ERROR - [PERSONA] ペルソナDB保存エラー (麻衣): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,706 - ERROR - [PERSONA] ペルソナDB保存エラー (大輔): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,707 - ERROR - [PERSONA] ペルソナDB保存エラー (由香): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,708 - ERROR - [PERSONA] ペルソナDB保存エラー (雅人): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,709 - ERROR - [PERSONA] ペルソナDB保存エラー (美咲): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,710 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,710 - ERROR - [PERSONA] ペルソナDB保存エラー (沙織): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,711 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,712 - ERROR - [PERSONA] ペルソナDB保存エラー (千春): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,713 - ERROR - [PERSONA] ペルソナDB保存エラー (直人): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,714 - ERROR - [PERSONA] ペルソナDB保存エラー (加奈): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,714 - ERROR - [PERSONA] ペルソナDB保存エラー (直人14): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,715 - ERROR - [PERSONA] ペルソナDB保存エラー (香織): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,716 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人16): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,717 - ERROR - [PERSONA] ペルソナDB保存エラー (愛): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,718 - ERROR - [PERSONA] ペルソナDB保存エラー (祐介): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,718 - ERROR - [PERSONA] ペルソナDB保存エラー (美穂): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,719 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大20): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,720 - ERROR - [PERSONA] ペルソナDB保存エラー (愛21): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,721 - ERROR - [PERSONA] ペルソナDB保存エラー (拓海): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,722 - ERROR - [PERSONA] ペルソナDB保存エラー (瞳): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,722 - ERROR - [PERSONA] ペルソナDB保存エラー (雄大24): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,724 - ERROR - [PERSONA] ペルソナDB保存エラー (樹): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,725 - ERROR - [PERSONA] ペルソナDB保存エラー (結愛): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,726 - ERROR - [PERSONA] ペルソナDB保存エラー (心): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,726 - ERROR - [PERSONA] ペルソナDB保存エラー (千尋): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,727 - ERROR - [PERSONA] ペルソナDB保存エラー (悠斗): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,728 - ERROR - [PERSONA] ペルソナDB保存エラー (凛): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,729 - ERROR - [PERSONA] ペルソナDB保存エラー (大翔): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,729 - ERROR - [PERSONA] ペルソナDB保存エラー (美月): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,730 - ERROR - [PERSONA] ペルソナDB保存エラー (蓮): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,731 - ERROR - [PERSONA] ペルソナDB保存エラー (莉子): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,732 - ERROR - [PERSONA] ペルソナDB保存エラー (奏): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,732 - ERROR - [PERSONA] ペルソナDB保存エラー (愛莉): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,733 - ERROR - [PERSONA] ペルソナDB保存エラー (湊): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,734 - ERROR - [PERSONA] ペルソナDB保存エラー (陽菜): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,735 - ERROR - [PERSONA] ペルソナDB保存エラー (優斗): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,736 - ERROR - [PERSONA] ペルソナDB保存エラー (美咲15): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,737 - ERROR - [PERSONA] ペルソナDB保存エラー (陽太): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,738 - ERROR - [PERSONA] ペルソナDB保存エラー (琴音): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,739 - ERROR - [PERSONA] ペルソナDB保存エラー (翔太): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,740 - ERROR - [PERSONA] ペルソナDB保存エラー (陽菜19): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,741 - ERROR - [PERSONA] ペルソナDB保存エラー (心20): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,741 - ERROR - [PERSONA] ペルソナDB保存エラー (心春): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,742 - ERROR - [PERSONA] ペルソナDB保存エラー (樹22): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,743 - ERROR - [PERSONA] ペルソナDB保存エラー (美羽): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,744 - ERROR - [PERSONA] ペルソナDB保存エラー (悠人24): Object of type PersonalityType is not JSON serializable
+2025-07-07 00:15:37,744 - INFO - [PERSONA] 100体のペルソナを保存しました
+2025-07-07 00:15:37,744 - INFO - [APP] ペルソナデータ保存完了
+2025-07-07 00:15:37,744 - INFO - [APP] アプリケーション終了処理完了
+2025-07-07 00:15:37,770 - INFO - [APP] アプリケーション終了

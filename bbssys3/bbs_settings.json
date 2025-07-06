@@ -1,7 +1,8 @@
 {
-  "font_size": 15,
-  "window_width": 1200,
-  "window_height": 800,
+  "font_size": 12,
+  "window_width": 1366,
+  "window_height": 684,
   "auto_post_interval": 30,
-  "ai_activity_enabled": false
+  "ai_activity_enabled": false,
+  "current_username": "あなた"
 }
