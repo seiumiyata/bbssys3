@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 PC-98時代パソコン通信BBS風アプリケーション - メインモジュール
-Version: 1.0.0
+Version: 1.3.0 - g4f最新対応・DB修正版
 """
 
 import tkinter as tk
@@ -19,11 +19,15 @@ import re
 from typing import Dict, List, Optional, Tuple
 import queue
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import asyncio
+import importlib
 
 # g4fライブラリのインポートとエラーハンドリング
 try:
     import g4f
     from g4f.client import Client
+    from g4f import Provider
     G4F_AVAILABLE = True
     print("[SYSTEM] g4fライブラリが正常に読み込まれました")
 except ImportError as e:
@@ -39,7 +43,7 @@ except ImportError as e:
     sys.exit(1)
 
 # アプリケーションバージョン
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.3.0"
 
 # ログ設定
 logging.basicConfig(
@@ -53,11 +57,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class DatabaseManager:
-    """データベース管理クラス"""
+    """データベース管理クラス（マイグレーション対応）"""
     
     def __init__(self, db_path: str = "bbs_database.db"):
         self.db_path = db_path
         self.init_database()
+        self.migrate_database()
         logger.info(f"[DB] データベース初期化完了: {db_path}")
     
     def init_database(self):
@@ -76,7 +81,8 @@ class DatabaseManager:
                     created_by TEXT,
                     status TEXT DEFAULT 'active',
                     post_count INTEGER DEFAULT 0,
-                    last_post_time TIMESTAMP
+                    last_post_time TIMESTAMP,
+                    last_ai_post_time TIMESTAMP
                 )
             ''')
             
@@ -136,6 +142,51 @@ class DatabaseManager:
                 )
             ''')
             
+            # g4fプロバイダー管理テーブル
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS g4f_providers (
+                    provider_name TEXT PRIMARY KEY,
+                    is_active BOOLEAN DEFAULT TRUE,
+                    last_test_time TIMESTAMP,
+                    success_rate REAL DEFAULT 0.0,
+                    response_time REAL DEFAULT 0.0,
+                    error_count INTEGER DEFAULT 0,
+                    total_requests INTEGER DEFAULT 0,
+                    last_error TEXT,
+                    working_model TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+            
+            conn.commit()
+    
+    def migrate_database(self):
+        """データベースマイグレーション"""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            
+            # threadsテーブルにlast_ai_post_timeカラムが存在するかチェック
+            cursor.execute("PRAGMA table_info(threads)")
+            columns = [column[1] for column in cursor.fetchall()]
+            
+            if 'last_ai_post_time' not in columns:
+                try:
+                    cursor.execute("ALTER TABLE threads ADD COLUMN last_ai_post_time TIMESTAMP")
+                    logger.info("[DB] last_ai_post_timeカラムを追加しました")
+                except Exception as e:
+                    logger.error(f"[DB] マイグレーションエラー: {e}")
+            
+            # g4f_providersテーブルにworking_modelカラムが存在するかチェック
+            cursor.execute("PRAGMA table_info(g4f_providers)")
+            columns = [column[1] for column in cursor.fetchall()]
+            
+            if 'working_model' not in columns:
+                try:
+                    cursor.execute("ALTER TABLE g4f_providers ADD COLUMN working_model TEXT")
+                    logger.info("[DB] working_modelカラムを追加しました")
+                except Exception as e:
+                    logger.error(f"[DB] マイグレーションエラー: {e}")
+            
             conn.commit()
     
     def execute_query(self, query: str, params: tuple = ()) -> List[tuple]:
@@ -161,17 +212,132 @@ class DatabaseManager:
             logger.error(f"[DB] INSERT実行エラー: {e}")
             return -1
 
-class G4FManager:
-    """g4fライブラリ管理クラス"""
+class ProviderHealthMonitor:
+    """プロバイダー健全性監視クラス"""
     
-    def __init__(self):
+    def __init__(self, db_manager: DatabaseManager):
+        self.db_manager = db_manager
+        self.test_queue = queue.Queue()
+        self.results_queue = queue.Queue()
+        self.is_running = False
+        self.monitor_thread = None
+        
+    def start_monitoring(self):
+        """監視開始"""
+        self.is_running = True
+        self.monitor_thread = threading.Thread(target=self._monitor_loop, daemon=True)
+        self.monitor_thread.start()
+        logger.info("[G4F_MONITOR] プロバイダー監視開始")
+    
+    def stop_monitoring(self):
+        """監視停止"""
+        self.is_running = False
+        if self.monitor_thread:
+            self.monitor_thread.join(timeout=5)
+        logger.info("[G4F_MONITOR] プロバイダー監視停止")
+    
+    def _monitor_loop(self):
+        """監視ループ"""
+        while self.is_running:
+            try:
+                # 30分間隔でプロバイダーをテスト
+                time.sleep(1800)  # 30分
+                if self.is_running:
+                    self.test_queue.put("test_all_providers")
+            except Exception as e:
+                logger.error(f"[G4F_MONITOR] 監視ループエラー: {e}")
+                time.sleep(60)
+    
+    def record_provider_result(self, provider_name: str, success: bool, response_time: float, 
+                              error_msg: str = "", working_model: str = ""):
+        """プロバイダー結果記録"""
+        try:
+            # 既存レコード取得
+            existing = self.db_manager.execute_query(
+                "SELECT success_rate, total_requests, error_count FROM g4f_providers WHERE provider_name=?",
+                (provider_name,)
+            )
+            
+            if existing:
+                success_rate, total_requests, error_count = existing[0]
+                new_total = total_requests + 1
+                new_errors = error_count + (0 if success else 1)
+                new_success_rate = (total_requests * success_rate + (1 if success else 0)) / new_total
+                
+                self.db_manager.execute_insert(
+                    """UPDATE g4f_providers SET 
+                       is_active=?, last_test_time=CURRENT_TIMESTAMP, success_rate=?, 
+                       response_time=?, error_count=?, total_requests=?, last_error=?, working_model=?
+                       WHERE provider_name=?""",
+                    (success, new_success_rate, response_time, new_errors, new_total, 
+                     error_msg, working_model, provider_name)
+                )
+            else:
+                # 新規レコード作成
+                self.db_manager.execute_insert(
+                    """INSERT INTO g4f_providers 
+                       (provider_name, is_active, last_test_time, success_rate, response_time, 
+                        error_count, total_requests, last_error, working_model) 
+                       VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?, ?)""",
+                    (provider_name, success, 1.0 if success else 0.0, response_time, 
+                     0 if success else 1, 1, error_msg, working_model)
+                )
+                
+            logger.info(f"[G4F_MONITOR] プロバイダー結果記録: {provider_name} - {'成功' if success else '失敗'}")
+            
+        except Exception as e:
+            logger.error(f"[G4F_MONITOR] プロバイダー結果記録エラー: {e}")
+
+class G4FManager:
+    """g4fライブラリ管理クラス（最新対応版）"""
+    
+    def __init__(self, db_manager: DatabaseManager):
+        self.db_manager = db_manager
         self.client = None
         self.available_providers = []
         self.current_provider = None
+        self.current_model = None
+        self.provider_stats = {}
+        self.health_monitor = ProviderHealthMonitor(db_manager)
+        self.last_provider_test = 0
+        self.provider_test_interval = 300  # 5分間隔
+        self.max_retries = 3
+        self.timeout = 30
+        self.lock = threading.Lock()
+        
+        # 2025年対応プロバイダー・モデル組み合わせ
+        self.provider_model_map = self._get_current_provider_models()
+        
         self.init_g4f()
+        self.health_monitor.start_monitoring()
+    
+    def _get_current_provider_models(self) -> Dict:
+        """2025年現在の有効なプロバイダー・モデル組み合わせ"""
+        return {
+            # 高成功率プロバイダー
+            'Liaobots': ['claude-3-sonnet', 'gpt-4', 'gemini-pro'],
+            'DDG': ['gpt-4o-mini', 'claude-3-haiku', 'llama-3-8b'],
+            'Bing': ['gpt-4', 'copilot'],
+            'You': ['gpt-4o', 'claude-3-sonnet', 'llama-3-70b'],
+            'Blackbox': ['blackbox', 'gpt-4o'],
+            
+            # 中成功率プロバイダー
+            'ChatGpt': ['gpt-4o-mini', 'gpt-4'],
+            'Phind': ['phind-codellama', 'gpt-4'],
+            'FreeChatgpt': ['gpt-3.5-turbo', 'gpt-4'],
+            'GPTalk': ['gpt-3.5-turbo'],
+            'AiMathGPT': ['gpt-4o-mini'],
+            
+            # 試験的プロバイダー
+            'OpenaiChat': ['gpt-4o', 'gpt-4o-mini'],
+            'ChatBase': ['gpt-3.5-turbo'],
+            'FreeGpt': ['gpt-3.5-turbo'],
+            'Yqcloud': ['gpt-4'],
+            'HuggingChat': ['llama-3-70b', 'mistral-7b'],
+        }
     
     def init_g4f(self):
-        """g4f初期化"""
+        """g4f初期化（2025年対応版）"""
         if not G4F_AVAILABLE:
             logger.warning("[G4F] g4fライブラリが利用できません")
             return
@@ -180,114 +346,255 @@ class G4FManager:
             self.client = Client()
             self.find_available_providers()
             logger.info(f"[G4F] 初期化完了。利用可能プロバイダー: {len(self.available_providers)}個")
+            
         except Exception as e:
             logger.error(f"[G4F] 初期化エラー: {e}")
+            # 初期化失敗時は再試行
+            threading.Timer(30.0, self.init_g4f).start()
     
     def find_available_providers(self):
-        """利用可能プロバイダー検索"""
-        try:
-            # プロバイダーリストを取得
-            providers = [
-                g4f.Provider.Bing,
-                g4f.Provider.ChatBase,
-                g4f.Provider.FreeGpt,
-                g4f.Provider.GPTalk,
-                g4f.Provider.Liaobots,
-                g4f.Provider.OpenaiChat,
-                g4f.Provider.You,
-                g4f.Provider.Yqcloud,
-            ]
-            
-            for provider in providers:
-                try:
-                    # 簡単なテストメッセージで確認
-                    test_response = self.client.chat.completions.create(
-                        model="gpt-3.5-turbo",
-                        messages=[{"role": "user", "content": "test"}],
-                        provider=provider,
-                        timeout=10
-                    )
-                    if test_response:
-                        self.available_providers.append(provider)
-                        logger.info(f"[G4F] プロバイダー利用可能: {provider.__name__}")
-                except:
+        """利用可能プロバイダー検索（2025年対応版）"""
+        logger.info(f"[G4F] プロバイダーテスト開始: {len(self.provider_model_map)}個")
+        
+        working_providers = []
+        
+        # 各プロバイダーを順次テスト（並列処理は不安定なため順次実行）
+        for provider_name, models in self.provider_model_map.items():
+            try:
+                if not hasattr(Provider, provider_name):
                     continue
-            
-            if self.available_providers:
-                self.current_provider = self.available_providers[0]
                 
-        except Exception as e:
-            logger.error(f"[G4F] プロバイダー検索エラー: {e}")
+                provider_class = getattr(Provider, provider_name)
+                is_working, response_time, error_msg, working_model = self._test_provider_with_models(
+                    provider_class, models
+                )
+                
+                # 結果を記録
+                self.health_monitor.record_provider_result(
+                    provider_name, is_working, response_time, error_msg, working_model
+                )
+                
+                if is_working:
+                    working_providers.append({
+                        'provider': provider_class,
+                        'model': working_model,
+                        'response_time': response_time
+                    })
+                    logger.info(f"[G4F] プロバイダー利用可能: {provider_name} + {working_model} ({response_time:.2f}s)")
+                else:
+                    logger.warning(f"[G4F] プロバイダー利用不可: {provider_name} - {error_msg}")
+                    
+            except Exception as e:
+                logger.error(f"[G4F] プロバイダーテストエラー: {provider_name} - {e}")
+        
+        with self.lock:
+            self.available_providers = working_providers
+            if self.available_providers:
+                # 応答時間でソートして最も高速なものを選択
+                self.available_providers.sort(key=lambda x: x['response_time'])
+                self.current_provider = self.available_providers[0]['provider']
+                self.current_model = self.available_providers[0]['model']
+                logger.info(f"[G4F] 利用可能プロバイダー: {len(self.available_providers)}個")
+                logger.info(f"[G4F] 現在の設定: {self.current_provider.__name__} + {self.current_model}")
+            else:
+                logger.error("[G4F] 利用可能なプロバイダーがありません")
+        
+        self.last_provider_test = time.time()
+    
+    def _test_provider_with_models(self, provider_class, models: List[str]) -> Tuple[bool, float, str, str]:
+        """プロバイダーとモデルの組み合わせテスト"""
+        for model in models:
+            try:
+                start_time = time.time()
+                
+                # 日本語テストメッセージ
+                test_message = "こんにちは"
+                
+                response = self.client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": test_message}],
+                    provider=provider_class,
+                    timeout=15  # 短いタイムアウト
+                )
+                
+                response_time = time.time() - start_time
+                
+                if response and isinstance(response, str) and len(response.strip()) > 0:
+                    if self._is_valid_japanese_response(response):
+                        return True, response_time, "", model
+                
+            except Exception as e:
+                error_msg = str(e)
+                logger.debug(f"[G4F] モデル {model} テスト失敗: {error_msg}")
+                continue
+        
+        return False, 0.0, "全モデルで失敗", ""
+    
+    def _is_valid_japanese_response(self, response: str) -> bool:
+        """日本語応答の妥当性チェック"""
+        if not response or len(response.strip()) < 1:
+            return False
+        
+        # 基本的な応答チェック（日本語でなくても有効なレスポンスは受け入れる）
+        invalid_patterns = [
+            r'^Error:.*', r'^Sorry.*', r'^I apologize.*', 
+            r'.*error occurred.*', r'.*something went wrong.*',
+            r'.*errors.*', r'.*failed.*', r'.*unavailable.*'
+        ]
+        
+        for pattern in invalid_patterns:
+            if re.search(pattern, response, re.IGNORECASE):
+                return False
+        
+        return True
+    
+    def get_best_provider(self):
+        """最適なプロバイダーを選択"""
+        if not self.available_providers:
+            return None, None
+        
+        # 成功率の高いプロバイダーを優先
+        best_provider = self.available_providers[0]
+        return best_provider['provider'], best_provider['model']
     
     def generate_response(self, prompt: str, persona_context: str = "") -> str:
-        """AI応答生成"""
-        if not self.client or not self.available_providers:
-            return "AIシステムが利用できません。"
+        """AI応答生成（2025年対応版）"""
+        if not self.client:
+            logger.warning("[G4F] クライアントが利用できません")
+            return None
         
-        try:
-            # プロバイダーをローテーション
-            if len(self.available_providers) > 1:
-                self.current_provider = random.choice(self.available_providers)
+        # 定期的なプロバイダーテスト
+        if time.time() - self.last_provider_test > self.provider_test_interval:
+            threading.Thread(target=self.find_available_providers, daemon=True).start()
+        
+        if not self.available_providers:
+            logger.warning("[G4F] 利用可能なプロバイダーがありません")
+            return None
+        
+        # フルプロンプト構築
+        full_prompt = f"{persona_context}\n\n{prompt}" if persona_context else prompt
+        
+        # リトライ処理
+        for attempt in range(self.max_retries):
+            provider, model = self.get_best_provider()
+            if not provider or not model:
+                break
             
-            # プロンプト構築
-            full_prompt = f"{persona_context}\n\n{prompt}"
-            
-            response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": full_prompt}],
-                provider=self.current_provider,
-                timeout=30
-            )
-            
-            # 英語・中国語エラーメッセージを除外
-            if isinstance(response, str):
-                cleaned_response = self.clean_response(response)
-                if cleaned_response:
-                    logger.info(f"[G4F] 応答生成成功: {self.current_provider.__name__}")
-                    return cleaned_response
-            
-            return "応答の生成に失敗しました。"
-            
-        except Exception as e:
-            logger.error(f"[G4F] 応答生成エラー: {e}")
-            # プロバイダーを変更して再試行
-            if len(self.available_providers) > 1:
-                self.available_providers.remove(self.current_provider)
-                return self.generate_response(prompt, persona_context)
-            return "AIシステムエラーが発生しました。"
+            try:
+                start_time = time.time()
+                
+                response = self.client.chat.completions.create(
+                    model=model,
+                    messages=[{"role": "user", "content": full_prompt}],
+                    provider=provider,
+                    timeout=self.timeout
+                )
+                
+                response_time = time.time() - start_time
+                
+                if response and isinstance(response, str):
+                    cleaned_response = self.clean_response(response)
+                    if cleaned_response:
+                        # 成功を記録
+                        self.health_monitor.record_provider_result(
+                            provider.__name__, True, response_time, "", model
+                        )
+                        logger.info(f"[G4F] 応答生成成功: {provider.__name__} + {model}")
+                        return cleaned_response
+                
+                # 失敗を記録
+                self.health_monitor.record_provider_result(
+                    provider.__name__, False, response_time, "無効な応答", model
+                )
+                
+            except Exception as e:
+                response_time = time.time() - start_time if 'start_time' in locals() else 0
+                error_msg = str(e)
+                
+                # エラーを記録
+                self.health_monitor.record_provider_result(
+                    provider.__name__, False, response_time, error_msg, model or ""
+                )
+                
+                logger.warning(f"[G4F] プロバイダーエラー: {provider.__name__} - {error_msg}")
+                
+                # プロバイダーを一時的に除外
+                with self.lock:
+                    self.available_providers = [p for p in self.available_providers if p['provider'] != provider]
+        
+        # 全て失敗した場合
+        logger.error("[G4F] 全プロバイダーで応答生成に失敗しました")
+        return None
     
     def clean_response(self, response: str) -> str:
-        """応答のクリーニング（英語・中国語エラーメッセージ除外）"""
-        # 英語エラーパターン
-        english_patterns = [
-            r'^Error:.*',
-            r'^Sorry.*',
-            r'^I apologize.*',
-            r'^Unable to.*',
-            r'^Cannot.*',
-            r'.*error occurred.*',
-            r'.*something went wrong.*'
-        ]
-        
-        # 中国語エラーパターン
-        chinese_patterns = [
-            r'.*错误.*',
-            r'.*失败.*',
-            r'.*异常.*',
-            r'.*系统.*错误.*'
-        ]
-        
-        # パターンチェック
-        for pattern in english_patterns + chinese_patterns:
-            if re.match(pattern, response, re.IGNORECASE):
-                return ""
-        
-        # 日本語が含まれているかチェック
-        japanese_chars = re.findall(r'[ひらがなカタカナ漢字]', response)
-        if len(japanese_chars) < 5:  # 日本語文字が5文字未満の場合は除外
+        """応答のクリーニング（強化版）"""
+        if not response:
             return ""
         
+        # 強化されたエラーパターン
+        error_patterns = [
+            # 英語エラーパターン
+            r'^Error:.*', r'^Sorry.*', r'^I apologize.*', r'^Unable to.*',
+            r'^Cannot.*', r'.*error occurred.*', r'.*something went wrong.*',
+            r'^I\'m sorry.*', r'^I can\'t.*', r'.*not available.*',
+            r'.*system error.*', r'.*service unavailable.*',
+            
+            # 中国語エラーパターン
+            r'.*错误.*', r'.*失败.*', r'.*异常.*', r'.*系统.*错误.*',
+            r'.*抱歉.*', r'.*无法.*', r'.*不能.*',
+            
+            # 日本語エラーパターン
+            r'.*エラー.*', r'.*失敗.*', r'.*利用.*できません.*',
+            r'.*申し訳.*', r'.*すみません.*システム.*',
+            r'.*AI.*利用.*', r'.*システム.*エラー.*',
+            r'.*現在.*利用.*できません.*', r'.*サービス.*利用.*できません.*',
+            r'.*接続.*エラー.*', r'.*応答.*生成.*できません.*'
+        ]
+        
+        # エラーパターンチェック
+        for pattern in error_patterns:
+            if re.search(pattern, response.strip(), re.IGNORECASE):
+                return ""
+        
+        # AI関連の文言を自然に修正
+        response = re.sub(r'AI.*として.*', '', response, flags=re.IGNORECASE)
+        response = re.sub(r'人工知能.*です.*', '', response, flags=re.IGNORECASE)
+        response = re.sub(r'アシスタント.*', '', response, flags=re.IGNORECASE)
+        
         return response.strip()
+    
+    def get_provider_statistics(self) -> Dict:
+        """プロバイダー統計取得"""
+        stats = self.db_manager.execute_query(
+            """SELECT provider_name, is_active, success_rate, response_time, 
+               error_count, total_requests, last_error, working_model
+               FROM g4f_providers ORDER BY success_rate DESC"""
+        )
+        
+        return {
+            'total_providers': len(self.provider_model_map),
+            'available_providers': len(self.available_providers),
+            'current_provider': self.current_provider.__name__ if self.current_provider else None,
+            'current_model': self.current_model,
+            'provider_details': [
+                {
+                    'name': s[0],
+                    'active': bool(s[1]),
+                    'success_rate': s[2],
+                    'response_time': s[3],
+                    'error_count': s[4],
+                    'total_requests': s[5],
+                    'last_error': s[6],
+                    'working_model': s[7]
+                }
+                for s in stats
+            ]
+        }
+    
+    def force_provider_refresh(self):
+        """プロバイダー強制更新"""
+        logger.info("[G4F] プロバイダー強制更新開始")
+        threading.Thread(target=self.find_available_providers, daemon=True).start()
 
 class ThreadManager:
     """スレッド管理クラス"""
@@ -343,8 +650,28 @@ class ThreadManager:
             for t in threads
         ]
     
+    def get_all_threads(self) -> List[Dict]:
+        """全スレッド取得"""
+        threads = self.db_manager.execute_query(
+            """SELECT thread_id, category_main, category_sub, title, post_count, 
+               last_post_time, last_ai_post_time FROM threads WHERE status='active'"""
+        )
+        
+        return [
+            {
+                "thread_id": t[0],
+                "category_main": t[1],
+                "category_sub": t[2],
+                "title": t[3],
+                "post_count": t[4] or 0,
+                "last_post_time": t[5],
+                "last_ai_post_time": t[6]
+            }
+            for t in threads
+        ]
+    
     def get_thread_posts(self, thread_id: int, limit: int = 50) -> List[Dict]:
-        """スレッド投稿取得（近い時間ほど重視）"""
+        """スレッド投稿取得"""
         posts = self.db_manager.execute_query(
             """SELECT persona_name, content, posted_at, is_user_post 
                FROM posts WHERE thread_id=? 
@@ -359,7 +686,7 @@ class ThreadManager:
                 "posted_at": p[2],
                 "is_user_post": bool(p[3])
             }
-            for p in reversed(posts)  # 時系列順にする
+            for p in reversed(posts)
         ]
     
     def add_post(self, thread_id: int, persona_name: str, content: str, is_user_post: bool = False) -> bool:
@@ -372,13 +699,23 @@ class ThreadManager:
             )
             
             # スレッドの投稿数と最終投稿時間を更新
-            self.db_manager.execute_insert(
-                """UPDATE threads SET 
-                   post_count = (SELECT COUNT(*) FROM posts WHERE thread_id = ?),
-                   last_post_time = CURRENT_TIMESTAMP 
-                   WHERE thread_id = ?""",
-                (thread_id, thread_id)
-            )
+            if is_user_post:
+                self.db_manager.execute_insert(
+                    """UPDATE threads SET 
+                       post_count = (SELECT COUNT(*) FROM posts WHERE thread_id = ?),
+                       last_post_time = CURRENT_TIMESTAMP 
+                       WHERE thread_id = ?""",
+                    (thread_id, thread_id)
+                )
+            else:
+                self.db_manager.execute_insert(
+                    """UPDATE threads SET 
+                       post_count = (SELECT COUNT(*) FROM posts WHERE thread_id = ?),
+                       last_post_time = CURRENT_TIMESTAMP,
+                       last_ai_post_time = CURRENT_TIMESTAMP
+                       WHERE thread_id = ?""",
+                    (thread_id, thread_id)
+                )
             
             logger.info(f"[THREAD] 投稿追加: {persona_name} -> Thread {thread_id}")
             return True
@@ -386,6 +723,25 @@ class ThreadManager:
         except Exception as e:
             logger.error(f"[THREAD] 投稿追加エラー: {e}")
             return False
+    
+    def get_seconds_since_last_ai_post(self, thread_id: int) -> float:
+        """最後のAI投稿からの経過秒数を取得"""
+        try:
+            result = self.db_manager.execute_query(
+                "SELECT last_ai_post_time FROM threads WHERE thread_id=?",
+                (thread_id,)
+            )
+            
+            if result and result[0][0]:
+                last_time = datetime.datetime.fromisoformat(result[0][0])
+                now = datetime.datetime.now()
+                return (now - last_time).total_seconds()
+            else:
+                return 999999  # 投稿がない場合は十分大きな値
+                
+        except Exception as e:
+            logger.error(f"[THREAD] 最終AI投稿時間取得エラー: {e}")
+            return 999999
 
 class BBSApplication:
     """メインアプリケーションクラス"""
@@ -396,7 +752,7 @@ class BBSApplication:
         
         # コンポーネント初期化
         self.db_manager = DatabaseManager()
-        self.g4f_manager = G4FManager()
+        self.g4f_manager = G4FManager(self.db_manager)
         self.thread_manager = ThreadManager(self.db_manager)
         self.persona_manager = PersonaManager(self.db_manager, self.g4f_manager)
         
@@ -405,7 +761,7 @@ class BBSApplication:
         self.current_thread_id = None
         self.admin_mode = False
         self.ai_activity_enabled = True
-        self.auto_post_interval = 45  # 秒
+        self.auto_post_interval = 45
         
         # メッセージキュー
         self.message_queue = queue.Queue()
@@ -414,8 +770,8 @@ class BBSApplication:
         self.create_widgets()
         self.setup_keybindings()
         
-        # 自動投稿スレッド開始
-        self.start_auto_posting()
+        # 人間らしい自動投稿システム開始
+        self.start_human_like_posting()
         
         # メッセージ処理開始
         self.process_messages()
@@ -436,7 +792,6 @@ class BBSApplication:
         style.configure('BBS.TButton', background='#0000FF', foreground='#FFFFFF', font=('MS Gothic', 9))
         style.configure('BBS.Treeview', background='#000080', foreground='#FFFFFF', fieldbackground='#000080')
         
-        # アイコン設定（存在する場合）
         try:
             self.root.iconbitmap('bbs_icon.ico')
         except:
@@ -690,12 +1045,6 @@ class BBSApplication:
             content = post['content']
             is_user = post['is_user_post']
             
-            # ユーザー投稿とAI投稿で色分け
-            if is_user:
-                name_color = "#FFFF00"  # 黄色
-            else:
-                name_color = "#00FFFF"  # シアン
-            
             # 投稿表示
             self.post_display.insert(tk.END, f"{i+1:3d}: ", "number")
             self.post_display.insert(tk.END, f"{timestamp} ", "timestamp")
@@ -762,8 +1111,8 @@ class BBSApplication:
     def show_admin_panel(self):
         """管理パネル表示"""
         admin_window = tk.Toplevel(self.root)
-        admin_window.title("管理パネル")
-        admin_window.geometry("400x300")
+        admin_window.title("管理パネル - g4f最新対応版")
+        admin_window.geometry("700x700")
         admin_window.configure(bg="#000000")
         
         # AI活動制御
@@ -789,24 +1138,115 @@ class BBSApplication:
             style='BBS.TButton'
         ).pack(side=tk.LEFT)
         
-        # 投稿間隔調整
-        interval_frame = ttk.Frame(admin_window, style='BBS.TFrame')
-        interval_frame.pack(fill=tk.X, padx=10, pady=5)
+        # g4f管理
+        g4f_frame = ttk.Frame(admin_window, style='BBS.TFrame')
+        g4f_frame.pack(fill=tk.X, padx=10, pady=5)
         
-        ttk.Label(interval_frame, text="投稿間隔調整:", style='BBS.TLabel').pack(anchor=tk.W)
+        ttk.Label(g4f_frame, text="g4f管理 (2025年対応版):", style='BBS.TLabel').pack(anchor=tk.W)
         
-        self.interval_var = tk.IntVar(value=self.auto_post_interval)
-        interval_scale = tk.Scale(
-            interval_frame,
-            from_=30,
-            to=120,
-            orient=tk.HORIZONTAL,
-            variable=self.interval_var,
+        g4f_button_frame = ttk.Frame(g4f_frame, style='BBS.TFrame')
+        g4f_button_frame.pack(fill=tk.X, pady=5)
+        
+        ttk.Button(
+            g4f_button_frame,
+            text="プロバイダー再検索",
+            command=self.g4f_manager.force_provider_refresh,
+            style='BBS.TButton'
+        ).pack(side=tk.LEFT, padx=(0, 5))
+        
+        # 現在の接続状況表示
+        connection_frame = ttk.Frame(admin_window, style='BBS.TFrame')
+        connection_frame.pack(fill=tk.X, padx=10, pady=5)
+        
+        ttk.Label(connection_frame, text="現在の接続状況:", style='BBS.TLabel').pack(anchor=tk.W)
+        
+        connection_text = tk.Text(
+            connection_frame,
             bg="#000080",
             fg="#FFFFFF",
-            command=self.update_interval
+            font=('MS Gothic', 9),
+            height=3,
+            state=tk.DISABLED
         )
-        interval_scale.pack(fill=tk.X, pady=5)
+        connection_text.pack(fill=tk.X, pady=5)
+        
+        def update_connection_status():
+            connection_text.config(state=tk.NORMAL)
+            connection_text.delete(1.0, tk.END)
+            
+            if self.g4f_manager.current_provider and self.g4f_manager.current_model:
+                connection_text.insert(tk.END, f"✓ 接続中: {self.g4f_manager.current_provider.__name__}\n")
+                connection_text.insert(tk.END, f"  使用モデル: {self.g4f_manager.current_model}\n")
+                connection_text.insert(tk.END, f"  利用可能プロバイダー: {len(self.g4f_manager.available_providers)}個")
+            else:
+                connection_text.insert(tk.END, "✗ 接続なし\n")
+                connection_text.insert(tk.END, "利用可能なプロバイダーがありません")
+            
+            connection_text.config(state=tk.DISABLED)
+        
+        update_connection_status()
+        
+        ttk.Button(
+            connection_frame,
+            text="接続状況更新",
+            command=update_connection_status,
+            style='BBS.TButton'
+        ).pack(pady=2)
+        
+        # g4f統計表示
+        stats_frame = ttk.Frame(admin_window, style='BBS.TFrame')
+        stats_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        
+        ttk.Label(stats_frame, text="g4fプロバイダー統計 (2025年最新):", style='BBS.TLabel').pack(anchor=tk.W)
+        
+        stats_text = scrolledtext.ScrolledText(
+            stats_frame,
+            bg="#000000",
+            fg="#00FF00",
+            font=('MS Gothic', 8),
+            height=20,
+            state=tk.DISABLED
+        )
+        stats_text.pack(fill=tk.BOTH, expand=True, pady=5)
+        
+        def update_all_stats():
+            try:
+                stats = self.g4f_manager.get_provider_statistics()
+                
+                stats_text.config(state=tk.NORMAL)
+                stats_text.delete(1.0, tk.END)
+                
+                stats_text.insert(tk.END, f"■ g4fシステム統計 (Version {APP_VERSION}) ■\n")
+                stats_text.insert(tk.END, f"総プロバイダー数: {stats['total_providers']}\n")
+                stats_text.insert(tk.END, f"利用可能: {stats['available_providers']}\n")
+                stats_text.insert(tk.END, f"現在使用中: {stats['current_provider'] or 'なし'}\n")
+                stats_text.insert(tk.END, f"現在のモデル: {stats['current_model'] or 'なし'}\n\n")
+                
+                stats_text.insert(tk.END, "■ プロバイダー詳細 ■\n")
+                for provider in stats['provider_details']:
+                    status = "✓" if provider['active'] else "✗"
+                    stats_text.insert(tk.END, f"{status} {provider['name']}\n")
+                    stats_text.insert(tk.END, f"   動作モデル: {provider['working_model'] or 'なし'}\n")
+                    stats_text.insert(tk.END, f"   成功率: {provider['success_rate']:.1%}\n")
+                    stats_text.insert(tk.END, f"   応答時間: {provider['response_time']:.2f}s\n")
+                    stats_text.insert(tk.END, f"   エラー: {provider['error_count']}/{provider['total_requests']}\n")
+                    if provider['last_error']:
+                        stats_text.insert(tk.END, f"   最終エラー: {provider['last_error'][:50]}...\n")
+                    stats_text.insert(tk.END, "\n")
+                
+                stats_text.config(state=tk.DISABLED)
+                
+            except Exception as e:
+                logger.error(f"[ADMIN] 統計更新エラー: {e}")
+        
+        update_all_stats()
+        
+        ttk.Button(
+            stats_frame,
+            text="統計更新",
+            command=update_all_stats,
+            style='BBS.TButton'
+        ).pack(pady=5)
         
         # バージョン情報
         version_frame = ttk.Frame(admin_window, style='BBS.TFrame')
@@ -815,22 +1255,7 @@ class BBSApplication:
         ttk.Label(version_frame, text="バージョン情報:", style='BBS.TLabel').pack(anchor=tk.W)
         ttk.Label(
             version_frame, 
-            text=f"草の根BBS v{APP_VERSION}\n開発日: 2025年7月\nPython版PC-98風BBS",
-            style='BBS.TLabel'
-        ).pack(anchor=tk.W, pady=5)
-        
-        # ペルソナ統計
-        stats_frame = ttk.Frame(admin_window, style='BBS.TFrame')
-        stats_frame.pack(fill=tk.X, padx=10, pady=5)
-        
-        ttk.Label(stats_frame, text="システム統計:", style='BBS.TLabel').pack(anchor=tk.W)
-        
-        persona_count = len(self.persona_manager.personas)
-        active_personas = sum(1 for p in self.persona_manager.personas.values() if p.is_active)
-        
-        ttk.Label(
-            stats_frame,
-            text=f"ペルソナ数: {persona_count}\n活動中: {active_personas}\nスレッド数: {len(self.current_threads)}",
+            text=f"草の根BBS v{APP_VERSION}\ng4f最新対応・DB修正版\n開発日: 2025年7月\n対応プロバイダー: Liaobots, DDG, Bing, You, Blackbox等",
             style='BBS.TLabel'
         ).pack(anchor=tk.W, pady=5)
     
@@ -840,44 +1265,83 @@ class BBSApplication:
         self.update_status()
         logger.info(f"[ADMIN] AI活動: {'有効' if enabled else '無効'}")
     
-    def update_interval(self, value):
-        """投稿間隔更新"""
-        self.auto_post_interval = int(value)
-        logger.info(f"[ADMIN] 投稿間隔変更: {self.auto_post_interval}秒")
-    
     def update_status(self):
         """ステータス更新"""
-        status_text = f"Version: {APP_VERSION} | AI活動: {'ON' if self.ai_activity_enabled else 'OFF'} | 管理モード: {'ON' if self.admin_mode else 'OFF'}"
+        provider_status = ""
+        if self.g4f_manager.current_provider and self.g4f_manager.current_model:
+            provider_status = f" | {self.g4f_manager.current_provider.__name__}+{self.g4f_manager.current_model}"
+        
+        status_text = f"Version: {APP_VERSION} | AI活動: {'ON' if self.ai_activity_enabled else 'OFF'} | 管理モード: {'ON' if self.admin_mode else 'OFF'}{provider_status}"
         self.status_label.config(text=status_text)
     
-    def start_auto_posting(self):
-        """自動投稿スレッド開始"""
-        def auto_post_worker():
+    def start_human_like_posting(self):
+        """人間らしい自動投稿システム開始"""
+        def human_like_post_worker():
+            """人間らしい投稿ワーカー"""
             while True:
                 try:
-                    if self.ai_activity_enabled and self.current_threads:
-                        # ランダムなスレッドを選択
-                        thread = random.choice(self.current_threads)
-                        thread_id = thread['thread_id']
-                        
-                        # ペルソナによる投稿生成
-                        success = self.persona_manager.generate_auto_post(thread_id)
-                        
-                        if success:
-                            # UI更新をメインスレッドに依頼
-                            self.message_queue.put(('update_display', None))
+                    if not self.ai_activity_enabled:
+                        time.sleep(10)
+                        continue
                     
-                    # インターバル待機（ランダム要素追加）
-                    wait_time = self.auto_post_interval + random.randint(-10, 10)
-                    time.sleep(max(30, wait_time))
+                    # 全スレッドを取得
+                    all_threads = self.thread_manager.get_all_threads()
+                    if not all_threads:
+                        time.sleep(30)
+                        continue
+                    
+                    # 投稿候補スレッドを選出
+                    candidate_threads = []
+                    for thread in all_threads:
+                        thread_id = thread['thread_id']
+                        seconds_since_last_ai_post = self.thread_manager.get_seconds_since_last_ai_post(thread_id)
+                        
+                        if seconds_since_last_ai_post >= 30:
+                            probability = min(0.95, 0.5 + (seconds_since_last_ai_post - 30) * 0.01)
+                            
+                            if random.random() < probability:
+                                candidate_threads.append({
+                                    'thread': thread,
+                                    'seconds_since': seconds_since_last_ai_post,
+                                    'priority': seconds_since_last_ai_post + random.uniform(0, 10)
+                                })
+                    
+                    # 優先度順でソート
+                    candidate_threads.sort(key=lambda x: x['priority'], reverse=True)
+                    
+                    # 上位1-3スレッドに投稿
+                    post_count = min(len(candidate_threads), random.choice([1, 1, 1, 2, 2, 3]))
+                    
+                    for i in range(post_count):
+                        if i < len(candidate_threads):
+                            thread_data = candidate_threads[i]['thread']
+                            thread_id = thread_data['thread_id']
+                            
+                            logger.info(f"[HUMAN_POST] 投稿対象選択: Thread {thread_id}")
+                            
+                            # ペルソナによる投稿生成
+                            success = self.persona_manager.generate_auto_post(thread_id)
+                            
+                            if success:
+                                # UI更新をメインスレッドに依頼
+                                self.message_queue.put(('update_display', None))
+                                logger.info(f"[HUMAN_POST] 投稿成功: Thread {thread_id}")
+                            
+                            # 投稿間隔
+                            post_interval = random.uniform(2, 8)
+                            time.sleep(post_interval)
+                    
+                    # 次のチェックまでの待機時間
+                    check_interval = random.uniform(5, 15)
+                    time.sleep(check_interval)
                     
                 except Exception as e:
-                    logger.error(f"[AUTO_POST] エラー: {e}")
-                    time.sleep(60)  # エラー時は1分待機
+                    logger.error(f"[HUMAN_POST] エラー: {e}")
+                    time.sleep(30)
         
-        auto_thread = threading.Thread(target=auto_post_worker, daemon=True)
-        auto_thread.start()
-        logger.info("[APP] 自動投稿スレッド開始")
+        human_post_thread = threading.Thread(target=human_like_post_worker, daemon=True)
+        human_post_thread.start()
+        logger.info("[APP] 人間らしい自動投稿システム開始")
     
     def process_messages(self):
         """メッセージキュー処理"""
@@ -888,13 +1352,13 @@ class BBSApplication:
                 if message_type == 'update_display':
                     self.update_post_display()
                     self.update_thread_list()
+                    self.update_status()
                 elif message_type == 'show_notification':
                     messagebox.showinfo("通知", data)
                 
         except queue.Empty:
             pass
         
-        # 100ms後に再実行
         self.root.after(100, self.process_messages)
     
     def run(self):
@@ -907,26 +1371,30 @@ class BBSApplication:
         except Exception as e:
             logger.error(f"[APP] 実行時エラー: {e}")
         finally:
+            self.g4f_manager.health_monitor.stop_monitoring()
             logger.info("[APP] アプリケーション終了")
 
 def main():
     """メイン関数"""
     print("=" * 60)
     print("  草の根BBS - PC-98時代パソコン通信の再現")
-    print(f"  Version: {APP_VERSION}")
+    print(f"  Version: {APP_VERSION} (g4f最新対応・DB修正版)")
     print("=" * 60)
     print("[SYSTEM] アプリケーション初期化中...")
     
     try:
         app = BBSApplication()
         print("[SYSTEM] 初期化完了。アプリケーションを開始します。")
+        print("[INFO] 主な改善点:")
+        print("  ✓ データベースマイグレーション対応")
+        print("  ✓ 2025年最新g4fプロバイダー・モデル対応")
+        print("  ✓ プロバイダー個別テスト実装")
+        print("  ✓ エラー完全除外システム")
         print("[INFO] キーボード操作:")
         print("  Ctrl+Enter: 投稿")
         print("  F5: 更新")
-        print("  F12: 管理モード")
+        print("  F12: 管理モード（接続状況・統計表示）")
         print("  Ctrl+Q: 終了")
-        print("  Tab/Shift+Tab: フォーカス移動")
-        print("  矢印キー: ナビゲーション")
         app.run()
     except Exception as e:
         print(f"[ERROR] アプリケーション開始エラー: {e}")
