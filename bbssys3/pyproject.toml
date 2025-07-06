@@ -1,0 +1,17 @@
+[project]
+name = "bbssys3"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "seiumiyata",email = "t.miyata@seiu.co.jp"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "g4f (>=0.5.6.3,<0.6.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
